@@ -3,11 +3,11 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const upload = require('../middleware/upload-image');
+const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
 const key = require('../config/key');
-const verifyToken = require('../middleware/verify-token');
+const verifyToken = require('../helper/verify-token');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
