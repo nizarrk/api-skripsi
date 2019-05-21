@@ -19,7 +19,7 @@ module.exports = async function customID(namatabel, namakolom, prefix, digit){
 
     let filteredNumber = counter.toString().padStart(digit, '0');
 
-    let newId = prefix + filteredNumber
+    let newId = prefix + filteredNumber;
 
     return newId ;
 }
