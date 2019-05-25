@@ -9,6 +9,7 @@ const user = require('./controllers/user');
 const info = require('./controllers/info');
 const kritik = require('./controllers/kritiksaran');
 const lapor = require('./controllers/lapor');
+const komentar = require('./controllers/komentar');
 
 app.use(cors());
 
@@ -23,6 +24,7 @@ app.use('/user', user);
 app.use('/info', info);
 app.use('/kritik', kritik);
 app.use('/lapor', lapor);
+app.use('/komentar', komentar);
 app.use('/uploads', express.static('uploads'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,5 +38,5 @@ app.get('/', (req, res) => {
 // const routes = require('./routes');
 // routes(app);
 
-app.listen(port);
+app.listen(port, '192.168.1.12');
 console.log('RESTful API server started on: ' + port);

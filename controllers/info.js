@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const sharp = require('sharp');
 const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
@@ -33,6 +34,9 @@ router.post('/', upload.single('fotoInfo'), async (req, res) => {
     try {
         let fullUrl = req.protocol + '://' + req.get('host') + '/';
         let path = req.file.path.replace(/\\/g, "/");
+
+        let resize = await sharp('./' + path).withMetadata().toBuffer();
+        await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
         
         let judul = req.body.judul;
         let fotoInfo = fullUrl + path;

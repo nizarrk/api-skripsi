@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const sharp = require('sharp');
 const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
@@ -17,6 +18,9 @@ router.post('/register', upload.single('fotoUser'), async (req, res) => {
         //var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
         let fullUrl = req.protocol + '://' + req.get('host') + '/';
         let path = req.file.path.replace(/\\/g, "/");
+
+        let resize = await sharp('./' + path).withMetadata().toBuffer();
+        await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
         
         let nama = req.body.nama;
         let alamat = req.body.alamat;
@@ -55,7 +59,7 @@ router.post('/login', async (req, res) => {
         
         if (match) {
             let token = jwt.sign({userId:result[0].id_user},key.tokenKey, {
-                expiresIn: "30d"
+                expiresIn: "1d"
             });
             res.status(200).json({
                 userId:result[0].id_user,
@@ -75,7 +79,7 @@ router.post('/login', async (req, res) => {
 router.get('/tes', verifyToken, async (req, res) => {
     try {
         res.send("halo");
-        console.log("halo");
+        console.log(req.userId);
         
     } catch (error) {
         console.log(error.message);
@@ -92,11 +96,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/profile', verifyToken, async (req, res) => {
     try {
-        let user_id = req.params.id;
-
-        let result = await db.query('SELECT * FROM user WHERE id_user = ?', [ user_id ]);
+        let result = await db.query('SELECT user.id_user, user.nama_user, user.alamat_user, user.tgl_lahir_user, user.telp_user, user.foto_user, user.email_user, user.pass_user, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.id_user_lapor = ?) AS total_lapor, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Menunggu" AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Proses" AND lapor.id_user_lapor = ?) AS proses, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Selesai" AND lapor.id_user_lapor = ?) AS selesai FROM user INNER JOIN lapor ON user.id_user = lapor.id_user_lapor AND user.id_user = ? GROUP BY user.id_user', 
+        [ req.user.userId, req.user.userId, req.user.userId, req.user.userId, req.user.userId ]);
         response.ok(result, res);
     } catch (error) {
         console.log(error.message);
