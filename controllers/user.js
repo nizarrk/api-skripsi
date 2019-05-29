@@ -15,9 +15,15 @@ router.use(bodyParser.json());
 
 router.post('/register', upload.single('fotoUser'), async (req, res) => {
     try {
+        let path = '';
+        if (req.file == undefined) {
+            path = "/uploads/user/defaultuser.jpg";
+        } else {
+            path = req.file.path.replace(/\\/g, "/");
+        }
         //var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-        let fullUrl = req.protocol + '://' + req.get('host') + '/';
-        let path = req.file.path.replace(/\\/g, "/");
+        // let fullUrl = req.protocol + '://' + req.get('host') + '/';
+        // let path = req.file.path.replace(/\\/g, "/");
 
         let resize = await sharp('./' + path).withMetadata().toBuffer();
         await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
@@ -26,16 +32,16 @@ router.post('/register', upload.single('fotoUser'), async (req, res) => {
         let alamat = req.body.alamat;
         let tgl = req.body.tgl;
         let telp = req.body.telp;
-        let fotoUser = fullUrl + path;
+        let fotoUser = path;
         let email = req.body.email;
         let pass = req.body.pass;
 
-        console.log(fotoUser);
+        console.log(path);
         
 
-        let result = await db.query('SELECT * FROM user where email_user = ?', [ email ]);
+        let result = await db.query('SELECT email_user FROM user where email_user = ?', [ email ]);
         if (result.length > 0) {
-            response.ok("email sudah terdaftar", res);
+            response.fail("email sudah terdaftar", res);
         } else {
             let hashedPassword = await bcrypt.hash(pass, 10);
             await db.query('INSERT INTO user (nama_user, alamat_user, tgl_lahir_user, telp_user, foto_user, email_user, pass_user) values (?,?,?,?,?,?,?)',
@@ -43,6 +49,7 @@ router.post('/register', upload.single('fotoUser'), async (req, res) => {
             response.ok("Berhasil menambahkan user!", res);
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: error.message});
         
     }
@@ -59,7 +66,7 @@ router.post('/login', async (req, res) => {
         
         if (match) {
             let token = jwt.sign({userId:result[0].id_user},key.tokenKey, {
-                expiresIn: "1d"
+                expiresIn: "1d" 
             });
             res.status(200).json({
                 userId:result[0].id_user,
@@ -98,9 +105,19 @@ router.get('/', async (req, res) => {
 
 router.get('/profile', verifyToken, async (req, res) => {
     try {
-        let result = await db.query('SELECT user.id_user, user.nama_user, user.alamat_user, user.tgl_lahir_user, user.telp_user, user.foto_user, user.email_user, user.pass_user, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.id_user_lapor = ?) AS total_lapor, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Menunggu" AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Proses" AND lapor.id_user_lapor = ?) AS proses, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Selesai" AND lapor.id_user_lapor = ?) AS selesai FROM user INNER JOIN lapor ON user.id_user = lapor.id_user_lapor AND user.id_user = ? GROUP BY user.id_user', 
-        [ req.user.userId, req.user.userId, req.user.userId, req.user.userId, req.user.userId ]);
+        let id = req.user.userId;
+        let query = `SELECT user.id_user, user.nama_user, user.alamat_user, user.tgl_lahir_user,
+                    user.telp_user, user.foto_user, user.email_user,
+                    (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.id_user_lapor = ?) AS total_lapor, 
+                    (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.id_user_izin = ?) AS total_izin,
+                    (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Menunggu" 
+                    AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor 
+                    WHERE lapor.status_lapor = "Proses" AND lapor.id_user_lapor = ?) AS proses, 
+                    (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Selesai" 
+                    AND lapor.id_user_lapor = ?) AS selesai FROM user WHERE user.id_user = ? GROUP BY user.id_user`
+        let result = await db.query(query, [ id, id, id, id, id, id ]);
         response.ok(result, res);
+        
     } catch (error) {
         console.log(error.message);
     }
@@ -126,20 +143,50 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
+router.put('/:id', verifyToken, upload.single('fotoUser'), async (req, res) => {
     try {
-        let id = req.body.id;
+        let path = '';
+        if (req.file == undefined) {
+            path = req.body.path;
+        } else {
+            path = '/' + req.file.path.replace(/\\/g, "/");
+        }
+
+        let resize = await sharp('./' + path).withMetadata().toBuffer();
+        await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
+
+        let query = `UPDATE user SET nama_user = ?, alamat_user = ?, tgl_lahir_user = ?, telp_user = ?,
+                     foto_user = ?, email_user = ? WHERE id_user = ?`;
+
+        let id = req.params.id;
         let nama = req.body.nama;
         let alamat = req.body.alamat;
         let tgl = req.body.tgl;
         let telp = req.body.telp;
-        let foto = req.body.foto;
+        let fotoUser = path;
         let email = req.body.email;
-        let pass = req.body.pass;
+        let oldemail = req.body.oldemail;
 
-        await db.query('UPDATE user SET nama_user = ?, alamat_user = ?, tgl_lahir_user = ?, telp_user = ?, foto_user = ?, email_user = ?, pass_user = ? WHERE id_user = ?',
-        [ nama, alamat, tgl, telp, foto, email, pass, id  ] );
-        response.ok("Berhasil merubah user!", res)
+        let result = await db.query('SELECT email_user FROM user where email_user = ?', [ email ]);
+        if (result.length > 0) {
+            console.log('result > 0');
+            
+            if (result[0].email_user == oldemail) {
+                console.log('email pancet');
+                await db.query(query, [ nama, alamat, tgl, telp, fotoUser, email, id  ] );
+                response.ok("Berhasil merubah user!", res);                
+            } else {
+                console.log('email ganti tapi wes onok');
+                response.fail("email sudah terdaftar", res);
+            }
+        } else {
+            console.log('result 0');
+            await db.query(query, [ nama, alamat, tgl, telp, fotoUser, email, id  ] );
+            response.ok("Berhasil merubah user!", res);
+            
+            // await db.query(query, [ nama, alamat, tgl, telp, fotoUser, email, id  ] );
+            // response.ok("Berhasil merubah user!", res);
+        }
     } catch (error) {
         console.log(error.message);
 

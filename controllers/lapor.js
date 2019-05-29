@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const sharp = require('sharp');
+const piexif = require("piexifjs");
+const fs = require("fs");
 const geocoder = require('../helper/geocoder');
 const upload = require('../helper/upload-image');
 const response = require('../config/res');
@@ -29,8 +31,8 @@ router.get('/', verifyToken, async (req, res) => {
                  lapor.tgl_lapor, lapor.status_lapor, user.nama_user, user.foto_user, 
                  (SELECT COUNT(komentar.id_komentar) FROM komentar WHERE komentar.id_lapor_komentar = lapor.id_lapor)
                  AS total_komentar FROM lapor INNER JOIN user ON lapor.id_user_lapor = user.id_user ORDER BY id_lapor DESC `;
-      let result = await db.query(query);
-      response.ok(result, res);
+    let result = await db.query(query);
+    response.ok(result, res);
   } catch (error) {
       console.log(error.message);
   }
@@ -38,50 +40,74 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.get('/laporku', verifyToken, async (req, res) => {
   try {
-      let result = await db.query('SELECT * FROM lapor INNER JOIN user ON lapor.id_user_lapor = user.id_user AND user.id_user = ? ORDER BY id_lapor DESC', 
-      [req.user.userId]);
+    let query = `SELECT * FROM lapor INNER JOIN user ON 
+                lapor.id_user_lapor = user.id_user AND user.id_user = ? ORDER BY id_lapor DESC`;
+      let result = await db.query(query, [req.user.userId]);
       response.ok(result, res);
   } catch (error) {
       console.log(error.message);
   }
 });
 
-router.post('/lokasi', verifyToken, (req, res) => {
-  let arr = [];
-  if(req.body.GPSLatitude){
-    // Calculate latitude decimal
-    let latDegree = req.body.GPSLatitude[0];
-    let latMinute = req.body.GPSLatitude[1];
-    let latSecond = req.body.GPSLatitude[2];
-    let latDirection = req.body.GPSLatitudeRef;
-          
-    let latFinal = ConvertDMSToDD(latDegree, latMinute, latSecond, latDirection);
+router.post('/geocode', verifyToken, (req, res) => {
+  try {
+    let arr = [];
+    if(req.body.GPSLatitude){
+      // Calculate latitude decimal
+      let latDegree = req.body.GPSLatitude[0];
+      let latMinute = req.body.GPSLatitude[1];
+      let latSecond = req.body.GPSLatitude[2];
+      let latDirection = req.body.GPSLatitudeRef;
+            
+      let latFinal = ConvertDMSToDD(latDegree, latMinute, latSecond, latDirection);
 
-    // Calculate longitude decimal
-    let lonDegree = req.body.GPSLongitude[0];
-    let lonMinute = req.body.GPSLongitude[1];
-    let lonSecond = req.body.GPSLongitude[2];
-    let lonDirection = req.body.GPSLongitudeRef;
+      // Calculate longitude decimal
+      let lonDegree = req.body.GPSLongitude[0];
+      let lonMinute = req.body.GPSLongitude[1];
+      let lonSecond = req.body.GPSLongitude[2];
+      let lonDirection = req.body.GPSLongitudeRef;
 
-    let lonFinal = ConvertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
+      let lonFinal = ConvertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
 
-    geocoder.reverse({lat: latFinal, lon: lonFinal}, function(err, data) {
-      if (err) {
-        response.fail(err, res);
-      } else {
-          arr.push({
-            originLat: latFinal,
-            originLng: lonFinal,
-            data: data[data.length - 1]
-                });
+      geocoder.reverse({lat: latFinal, lon: lonFinal}, function(err, data) {
+        if (err) {
+          response.fail(err, res);
+        } else {
+            arr.push({
+              originLat: latFinal,
+              originLng: lonFinal,
+              data: data[data.length - 1]
+                  });
 
-          console.log(arr);
+            response.ok(arr, res)
+          }
+      })
+    } else if (req.body.lat) {
+      let lat = req.body.lat;
+      let lng = req.body.lng;
 
-          response.ok(arr, res)
+      geocoder.reverse({lat: lat, lon: lng}, function(err, data) {
+        if (err) {
+          response.fail(err, res);
+        } else {
+            arr.push({
+              originLat: lat,
+              originLng: lng,
+              data: data[data.length - 1]
+                  });
+  
+            response.ok(arr, res)
+        }
+      });
+    } else {
+      //response.fail("tidak ada exif data", res);
+      res.status(204).json({message: 'tidak ada exif data'});
       }
-  })} else {
-        response.fail("tidak ada exif data", res);
-    }
+    
+  } catch (error) {
+    res.status(500).json({message: error.message});
+    
+  }
 });
 
 router.post('/', verifyToken, upload.single('fotoLapor'), async (req, res) => {
@@ -92,12 +118,11 @@ router.post('/', verifyToken, upload.single('fotoLapor'), async (req, res) => {
     let resize = await sharp('./' + path).withMetadata().toBuffer();
     await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
     
-    let uniqueID = await customID('lapor', 'kode_lapor', 'LPR-', 4);
+    let kode = await customID('lapor', 'kode_lapor', 'LPR-', 4);
 
-    let kode = uniqueID;
     let userid = req.user.userId;
     let kat = req.body.kat;
-    let fotoLapor = fullUrl + path;
+    let fotoLapor = '/' + path;
     let desk = req.body.desk;
     let lat = req.body.lat;
     let long = req.body.long;
@@ -110,6 +135,34 @@ router.post('/', verifyToken, upload.single('fotoLapor'), async (req, res) => {
             [ kode, userid, kat, fotoLapor, desk, lat, long, lokasi, vote, tgl, status  ]);
 
             response.ok("Berhasil menambahkan lapor!", res);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+});
+
+router.post('/piexif', verifyToken, upload.single('fotoLapor'), async (req, res) => {
+  try {
+    let file = fs.readFileSync(req.file.path);
+    let data = file.toString("binary");
+    let gps = {};
+    let lat = req.body.lat;
+    let lng = req.body.lng;
+
+    gps[piexif.GPSIFD.GPSLatitudeRef] = lat < 0 ? 'S' : 'N';
+    gps[piexif.GPSIFD.GPSLatitude] = piexif.GPSHelper.degToDmsRational(lat);
+    gps[piexif.GPSIFD.GPSLongitudeRef] = lng < 0 ? 'W' : 'E';
+    gps[piexif.GPSIFD.GPSLongitude] = piexif.GPSHelper.degToDmsRational(lng);
+    gps[piexif.GPSIFD.GPSVersionID] = [7, 7, 7, 7];
+    gps[piexif.GPSIFD.GPSDateStamp] = "1999:99:99 99:99:99";
+
+    let exifObj = {"GPS":gps};
+    let exifbytes = piexif.dump(exifObj);
+
+    let newData = piexif.insert(exifbytes, data);
+    let newfile = new Buffer.from(newData, "binary");
+    
+    fs.writeFileSync(req.file.path, newfile);
+    
   } catch (error) {
     res.status(500).json({message: error.message});
   }
@@ -131,6 +184,20 @@ router.get('/:id', verifyToken, async (req, res) => {
       response.ok(result, res);
   } catch (error) {
       console.log(error.message);
+      res.status(500).json({message: error.message});
+  }
+});
+
+router.put('/:id', verifyToken, async (req, res) => {
+  try {
+    let id = req.params.id;
+    let desk = req.body.desk;
+    let query = `UPDATE lapor SET lapor.desk_lapor = ? WHERE lapor.id_lapor = ?`;
+    let result = await db.query(query, [desk, id]);
+    response.ok(result, res);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({message: error.message});
   }
 });
 

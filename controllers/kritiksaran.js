@@ -29,14 +29,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-    try {
-        let user = req.body.user;
-        let rate = req.file.rate;
+router.post('/', verifyToken, async (req, res) => {
+    try {        
+        let user = req.user.userId;
+        let rate = req.body.rate;
         let desk = req.body.desk;
+        let tgl = new Date();
 
-        let result = await db.query('INSERT INTO kritiksaran (id_user_kritiksaran, rate_kritiksaran, desk_kritiksaran) values (?,?,?)', 
-        [user, rate, desk]);
+        console.log(user, rate, desk, tgl);
+        
+
+        let result = await db.query('INSERT INTO kritiksaran (id_user_kritiksaran, rate_kritiksaran, desk_kritiksaran, tgl_kritiksaran) values (?,?,?,?)', 
+        [user, rate, desk, tgl]);
         response.ok(result, res);
     } catch (error) {
         console.log(error.message);

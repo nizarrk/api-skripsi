@@ -10,6 +10,7 @@ const info = require('./controllers/info');
 const kritik = require('./controllers/kritiksaran');
 const lapor = require('./controllers/lapor');
 const komentar = require('./controllers/komentar');
+const izin = require('./controllers/izin');
 
 app.use(cors());
 
@@ -25,6 +26,7 @@ app.use('/info', info);
 app.use('/kritik', kritik);
 app.use('/lapor', lapor);
 app.use('/komentar', komentar);
+app.use('/izin', izin);
 app.use('/uploads', express.static('uploads'));
 
 app.use(bodyParser.urlencoded({ extended: true }));

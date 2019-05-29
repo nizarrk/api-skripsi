@@ -15,7 +15,7 @@ exports.fail = function(values, res) {
       'status': 500,
       'values': values
   };
-  res.status(500);
+  res.status(200);
   res.json(data);
   res.end();
 };
