@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
 const verifyToken = require('../helper/verify-token');
@@ -11,7 +10,10 @@ router.use(bodyParser.json());
 
 router.get('/', async (req, res) => {
     try {
-        let result = await db.query('SELECT * FROM kritiksaran');
+        let query = `SELECT kritiksaran.id_kritiksaran, kritiksaran.rate_kritiksaran, kritiksaran.desk_kritiksaran,
+                    kritiksaran.tgl_kritiksaran, user.id_user, user.nama_user FROM kritiksaran INNER JOIN user
+                    ON kritiksaran.id_user_kritiksaran = user.id_user ORDER BY id_kritiksaran DESC`;
+        let result = await db.query(query);
         response.ok(result, res);
     } catch (error) {
         console.log(error.message);

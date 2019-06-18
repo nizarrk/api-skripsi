@@ -1,7 +1,7 @@
 const util = require('util')
 const mysql = require('mysql')
 const pool = mysql.createPool({
-    connectionLimit: 10,
+    connectionLimit: 20,
     host: 'localhost',
     user: 'root',
     password: '',
@@ -22,7 +22,7 @@ pool.getConnection((err, connection) => {
         }
     }
 
-    if (connection) connection.release()
+    if (connection) connection.release();
 
     return
 })

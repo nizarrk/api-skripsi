@@ -114,8 +114,9 @@ router.get('/profile', verifyToken, async (req, res) => {
                     AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor 
                     WHERE lapor.status_lapor = "Proses" AND lapor.id_user_lapor = ?) AS proses, 
                     (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Selesai" 
-                    AND lapor.id_user_lapor = ?) AS selesai FROM user WHERE user.id_user = ? GROUP BY user.id_user`
-        let result = await db.query(query, [ id, id, id, id, id, id ]);
+                    AND lapor.id_user_lapor = ?) AS selesai, (SELECT COUNT(survey.id_user_survey) 
+                    FROM survey WHERE survey.id_user_survey = ?) AS total_survey FROM user WHERE user.id_user = ? GROUP BY user.id_user`
+        let result = await db.query(query, [ id, id, id, id, id, id, id ]);
         response.ok(result, res);
         
     } catch (error) {
@@ -139,6 +140,28 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        
+    }
+});
+
+router.put('/pass', verifyToken, async (req, res) => {
+    try {
+        let check = `SELECT user.pass_user FROM user WHERE user.id_user = ?`;
+        let oldpass = await db.query(check, [req.user.userId]);
+        if (oldpass.length > 0) {
+            let match = await bcrypt.compare(req.body.pass, oldpass[0].pass_user);
+            if (match) {
+                let hashedPassword = await bcrypt.hash(req.body.newpass, 10);
+                let query = `UPDATE user SET pass_user = ? WHERE id_user = ?`;
+                await db.query(query, [hashedPassword, req.user.userId]);
+                response.ok("Berhasil merubah password user!", res); 
+            } else {
+                response.fail("Password lama tidak sesuai", res);
+            }
+        } else {
+            response.fail("User tidak ditemukan!", res); 
+        }
+    } catch (error) {
         
     }
 });
@@ -192,6 +215,7 @@ router.put('/:id', verifyToken, upload.single('fotoUser'), async (req, res) => {
 
     }
 });
+
 
 router.delete('/:id', async (req, res) => {
     try {
