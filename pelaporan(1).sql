@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2019 at 02:57 PM
--- Server version: 10.1.31-MariaDB
--- PHP Version: 5.6.35
+-- Generation Time: Jun 23, 2019 at 08:03 PM
+-- Server version: 10.1.38-MariaDB
+-- PHP Version: 7.3.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -80,10 +80,12 @@ INSERT INTO `izin` (`id_izin`, `id_user_izin`, `kode_izin`, `surat_izin`, `ktp_i
 (3, 26, 'IZN-0002', '/uploads/izin/2019-06-13T133340557Z.png', '/uploads/izin/2019-06-13T133340579Z.jpeg', '/uploads/izin/2019-06-13T133340621Z.png', '', '0', '2019-06-13', '2019-06-13', '20:33:00', '20:33:00', '2019-06-13 20:33:43', 'Proses', NULL),
 (4, 26, 'IZN-0003', '/uploads/izin/2019-06-13T133531958Z.png', '/uploads/izin/2019-06-13T133531974Z.png', '/uploads/izin/2019-06-13T133532000Z.jpeg', 'awyeah', '0', '2019-06-13', '2019-06-13', '20:35:00', '20:35:00', '2019-06-13 20:35:35', 'Ditolak', NULL),
 (5, 26, 'IZN-0004', '/uploads/izin/2019-06-13T134045171Z.png', '/uploads/izin/2019-06-13T134045181Z.png', '/uploads/izin/2019-06-13T134045201Z.png', 'Bazaar / Pasar malam dan sejenisnya', 'tes', '2019-06-13', '2019-06-13', '20:40:00', '20:40:00', '2019-06-13 20:40:52', 'Selesai', NULL),
-(6, 26, 'IZN-0005', '/uploads/izin/2019-06-13T134205620Z.png', '/uploads/izin/2019-06-13T134205622Z.jpeg', '/uploads/izin/2019-06-13T134205637Z.png', 'test', 'waw', '2019-06-13', '2019-06-25', '20:41:00', '20:41:00', '2019-06-13 20:42:07', 'Proses', NULL),
+(6, 26, 'IZN-0005', '/uploads/izin/2019-06-13T134205620Z.png', '/uploads/izin/2019-06-13T134205622Z.jpeg', '/uploads/izin/2019-06-13T134205637Z.png', 'test', 'waw', '2019-06-13', '2019-06-25', '20:41:00', '20:41:00', '2019-06-13 20:42:07', 'Selesai', NULL),
 (7, 29, 'IZN-0006', '/uploads/izin/2019-06-13T134407027Z.jpeg', '/uploads/izin/2019-06-13T134407091Z.jpeg', '/uploads/izin/2019-06-13T134407662Z.jpeg', 'Road race', 'Jl. Benteng pancasila', '2019-06-13', '2019-06-13', '20:43:00', '22:15:00', '2019-06-13 20:44:11', 'Selesai', NULL),
 (8, 26, 'IZN-0007', '/uploads/izin/2019-06-14T110020476Z.jpeg', '/uploads/izin/2019-06-14T110021109Z.jpeg', '/uploads/izin/2019-06-14T110021619Z.jpeg', 'Orkes / konser musik dan sejenisnya', 'Jl. Surodinawan', '2019-06-14', '2019-06-15', '17:59:00', '23:59:00', '2019-06-14 18:00:24', 'Proses', 'lokasi tidak jelas'),
-(9, 20, 'IZN-0008', '/uploads/izin/2019-06-14T111751354Z.png', '/uploads/izin/2019-06-14T111751362Z.png', '/uploads/izin/2019-06-14T111751391Z.png', 'Sirkus', 'sad', '2019-06-14', '2019-06-14', '18:17:00', '18:17:00', '2019-06-14 18:17:57', 'Ditolak', 'lokasi tidak jelas');
+(9, 20, 'IZN-0008', '/uploads/izin/2019-06-14T111751354Z.png', '/uploads/izin/2019-06-14T111751362Z.png', '/uploads/izin/2019-06-14T111751391Z.png', 'Sirkus', 'sad', '2019-06-14', '2019-06-14', '18:17:00', '18:17:00', '2019-06-14 18:17:57', 'Ditolak', 'lokasi tidak jelas'),
+(10, 29, 'IZN-0009', '/uploads/izin/2019-06-23T030134023Z.jpeg', '/uploads/izin/2019-06-23T030135412Z.jpeg', '/uploads/izin/2019-06-23T030136041Z.jpeg', '', 'Tes', '2019-06-23', '2019-06-23', '10:01:00', '10:01:00', '2019-06-23 10:01:38', 'Menunggu', NULL),
+(11, 29, 'IZN-0010', '/uploads/izin/2019-06-23T035546246Z.jpeg', '/uploads/izin/2019-06-23T035546573Z.jpeg', '/uploads/izin/2019-06-23T035546781Z.jpeg', 'Bazaar / Pasar malam dan sejenisnya', 'Jl. Jawa', '2019-06-23', '2019-06-23', '10:54:00', '10:54:00', '2019-06-23 10:55:48', 'Menunggu', NULL);
 
 -- --------------------------------------------------------
 
@@ -129,8 +131,8 @@ INSERT INTO `jawaban` (`id_jawaban`, `id_pertanyaan_jawaban`, `jawaban`, `kode_j
 (52, 27, 'dikelola dengan baik', 'D'),
 (53, 28, 'Buruk', 'A'),
 (54, 28, 'Cukup', 'B'),
-(55, 28, 'Sangat Baik', 'C'),
-(56, 28, 'Baik', 'D'),
+(55, 28, 'Baik', 'C'),
+(56, 28, 'Sangat Baik', 'D'),
 (341, 124, 'Sesuai', 'A'),
 (342, 124, 'Kurang sesuai', 'B'),
 (343, 124, 'Tidak sesuai', 'C'),
@@ -170,31 +172,7 @@ INSERT INTO `jawaban` (`id_jawaban`, `id_pertanyaan_jawaban`, `jawaban`, `kode_j
 (433, 151, 'd', 'A'),
 (434, 151, 'df', 'B'),
 (435, 151, 'df', 'C'),
-(436, 151, 'df', 'D'),
-(457, 157, 'd', 'A'),
-(458, 157, 'dsf', 'B'),
-(459, 157, 'd', 'C'),
-(460, 157, 'd', 'D'),
-(461, 158, 'df', 'C'),
-(462, 158, 're', 'B'),
-(463, 158, '2', 'A'),
-(464, 158, 'fd', 'D'),
-(465, 159, 'sddf', 'A'),
-(466, 159, 'dsf', 'B'),
-(467, 159, 'sd', 'C'),
-(468, 159, 'dsf', 'D'),
-(469, 160, 'sdf', 'B'),
-(470, 160, 'sd', 'A'),
-(471, 160, 'sdf', 'C'),
-(472, 160, 'dsf', 'D'),
-(489, 165, 'gh', 'A'),
-(490, 165, 'xd', 'C'),
-(491, 165, 'gc', 'B'),
-(492, 165, 'rd', 'D'),
-(493, 166, 'jfj', 'A'),
-(494, 166, 'fg', 'C'),
-(495, 166, 'th', 'B'),
-(496, 166, 'dh', 'D');
+(436, 151, 'df', 'D');
 
 -- --------------------------------------------------------
 
@@ -240,8 +218,8 @@ INSERT INTO `jawaban_survey` (`id_jawaban_survey`, `id_pertanyaan_survey_jawaban
 (52, 27, 'dikelola dengan baik', 'D'),
 (53, 28, 'Buruk', 'A'),
 (54, 28, 'Cukup', 'B'),
-(55, 28, 'Sangat Baik', 'C'),
-(56, 28, 'Baik', 'D'),
+(55, 28, 'Baik', 'C'),
+(56, 28, 'Sangat Baik', 'D'),
 (341, 124, 'Sesuai', 'A'),
 (342, 124, 'Kurang sesuai', 'B'),
 (343, 124, 'Tidak sesuai', 'C'),
@@ -273,21 +251,20 @@ INSERT INTO `komentar` (`id_komentar`, `id_lapor_komentar`, `id_user_komentar`, 
 (11, 67, 20, 'Iyo sam hp mantul iku', '2019-06-02 16:59:32'),
 (21, 67, 20, 'Wadidaw', '2019-06-02 20:05:30'),
 (22, 67, 29, 'sek sam error terus e piye', '2019-06-02 22:13:47'),
-(23, 67, 20, 'Oyi sam', '2019-06-02 22:14:08'),
 (24, 66, 29, 'mantul sam', '2019-06-03 11:40:00'),
 (25, 67, 29, 'wes kenek a sam? he sam', '2019-06-03 12:00:53'),
 (27, 67, 20, 'Wes sam, lancar jaya', '2019-06-03 13:19:02'),
 (28, 67, 29, 'alhamdulillah', '2019-06-03 14:05:36'),
 (29, 67, 20, 'Suwun sam', '2019-06-03 14:11:12'),
 (31, 67, 29, 'podo podo sam', '2019-06-03 15:23:40'),
-(33, 67, 20, 'Oyisam', '2019-06-03 15:57:28'),
 (37, 66, 26, 'Sam', '2019-06-03 21:56:08'),
-(38, 67, 26, 'Ono opo iki rek? ', '2019-06-03 21:56:51'),
-(42, 67, 26, 'Halo', '2019-06-03 22:00:22'),
-(43, 64, 29, 'halo', '2019-06-03 22:03:43'),
 (44, 65, 29, 'tes', '2019-06-03 22:29:21'),
 (45, 69, 20, 'Lokasi dimana? ', '2019-06-10 14:53:31'),
-(46, 69, 29, 'Seberang sungai dinoyo', '2019-06-10 14:56:47');
+(46, 69, 29, 'Seberang sungai dinoyo', '2019-06-10 14:56:47'),
+(47, 31, 30, 'halo', '2019-06-21 10:14:57'),
+(58, 67, 30, 'masalah ini kami tutup', '2019-06-21 18:27:01'),
+(59, 67, 30, 'oke??', '2019-06-21 18:34:30'),
+(61, 67, 30, 'tes notif', '2019-06-22 15:09:42');
 
 -- --------------------------------------------------------
 
@@ -396,16 +373,24 @@ INSERT INTO `lapor` (`id_lapor`, `kode_lapor`, `id_user_lapor`, `kat_lapor`, `fo
 (59, 'LPR-0053', 29, 'Infrastruktur', '/uploads/lapor/2019-05-29T172138081Z.jpeg', 'hgj', -7.9543209075000005, 112.61422729472221, 'Jalan Kampus Universitas Brawijaya, Malang Kota 65145, Indonesia', '0', '2019-05-30 00:21:38', 'Menunggu', NULL),
 (60, 'LPR-0054', 20, 'Layanan', '/uploads/lapor/2019-05-31T060954543Z.jpeg', 'Tes', -7.486884593888889, 112.43370819083334, 'Mojokerto Kota 61321, Indonesia', '0', '2019-05-31 13:09:55', 'Menunggu', NULL),
 (61, 'LPR-0055', 20, 'Infrastruktur', '/uploads/lapor/2019-05-31T062656657Z.jpeg', 'Hehe', -7.476630463210514, 112.43167877197267, 'Jalan Majapahit, Mojokerto Kota 61322, Indonesia', '0', '2019-05-31 13:10:47', 'Menunggu', NULL),
-(62, 'LPR-0056', 26, 'Lalu Lintas', '/uploads/lapor/2019-05-31T062656657Z.jpeg', 'sad', -7.962209166666667, 112.61053466666667, 'Jalan Bendungan Nawangan, Malang Kota 65145, Indonesia', '0', '2019-05-31 13:26:56', 'Menunggu', NULL),
+(62, 'LPR-0056', 26, 'Lalu Lintas', '/uploads/lapor/2019-05-31T062656657Z.jpeg', 'sad', -7.962209166666667, 112.61053466666667, 'Jalan Bendungan Nawangan, Malang Kota 65145, Indonesia', '0', '2019-05-31 13:26:56', 'Selesai', NULL),
 (63, 'LPR-0057', 29, 'Infrastruktur', '', 'hehe', -7.4847717139348635, 112.4273443222046, 'Jalan Raya R. A. Basuni, Mojokerto Kabupaten 61361, Indonesia', '0', '2019-05-31 15:17:59', 'Ditolak', 'tidak ada foto'),
-(64, 'LPR-0058', 29, 'Pengendalian Operasi', '/uploads/lapor/2019-05-31T090423810Z.jpeg', 'asdsads', -7.458645425790822, 112.46000289916994, 'Jalan Raya Surabaya, Mojokerto Kota 61316, Indonesia', '0', '2019-05-31 16:04:24', 'Menunggu', NULL),
+(64, 'LPR-0058', 29, 'Pengendalian Operasi', '/uploads/lapor/2019-05-31T090423810Z.jpeg', 'asdsads', -7.458645425790822, 112.46000289916994, 'Jalan Raya Surabaya, Mojokerto Kota 61316, Indonesia', '0', '2019-05-31 16:04:24', 'Proses', NULL),
 (65, 'LPR-0059', 29, 'Layanan', '/uploads/lapor/2019-05-31T090752296Z.jpeg', 'sdasad', -7.962209166666667, 112.61053466666667, 'Jalan Bendungan Nawangan, Malang Kota 65145, Indonesia', '0', '2019-05-31 16:07:53', 'Ditolak', 'deskripsi tidak jelas'),
 (66, 'LPR-0060', 29, 'Layanan', '/uploads/lapor/2019-05-31T091032023Z.jpeg', 'adsdd', -7.481623025892601, 112.4359703063965, 'Jalan Raden Wijaya, Mojokerto Kota 61321, Indonesia', '0', '2019-05-31 16:10:32', 'Ditolak', 'deskripsi tidak jelas'),
-(67, 'LPR-0061', 29, 'Lalu Lintas', '/uploads/lapor/2019-05-31T091202222Z.jpeg', 'Honor 8X', -7.487069390861869, 112.44009017944337, 'Jalan Jaya Negara, Mojokerto Kabupaten 61363, Indonesia', '0', '2019-05-31 16:12:02', 'Menunggu', NULL),
-(68, 'LPR-0062', 29, 'Perparkiran', '/uploads/lapor/2019-06-10T074857524Z.jpeg', 'Simpus', -7.486882686388889, 112.43369293194445, 'Mojokerto Kabupaten 61361, Indonesia', '0', '2019-06-10 14:48:58', 'Menunggu', NULL),
+(67, 'LPR-0061', 29, 'Lalu Lintas', '/uploads/lapor/2019-05-31T091202222Z.jpeg', 'Honor 8X', -7.487069390861869, 112.44009017944337, 'Jalan Jaya Negara, Mojokerto Kabupaten 61363, Indonesia', '0', '2019-05-31 16:12:02', 'Selesai', ''),
+(68, 'LPR-0062', 29, 'Perparkiran', '/uploads/lapor/2019-06-10T074857524Z.jpeg', 'Simpus', -7.486882686388889, 112.43369293194445, 'Mojokerto Kabupaten 61361, Indonesia', '0', '2019-06-10 14:48:58', 'Proses', NULL),
 (69, 'LPR-0063', 29, 'Infrastruktur', '/uploads/lapor/2019-06-10T074955208Z.jpeg', 'Tes', -7.9600157736111115, 112.60550689694443, 'Jalan Bendungan Sigura Gura Barat, Malang Kota 65146, Indonesia', '0', '2019-06-10 14:49:56', 'Selesai', NULL),
 (70, 'LPR-0064', 26, 'Angkutan Umum', '/uploads/lapor/2019-06-15T105627361Z.jpeg', 'Test distrik', -7.44451784732906, 112.43173599024888, 'Mojokerto Kabupaten 61351, Indonesia', 'Gedek', '2019-06-15 17:56:27', 'Menunggu', NULL),
-(71, 'LPR-0065', 26, 'Layanan', '/uploads/lapor/2019-06-15T105719924Z.jpeg', 'Kopine larang lur', -7.474758238132547, 112.43013381958008, 'Kedung Kwali Gang 7, Mojokerto Kota 61322, Indonesia', 'Prajurit Kulon', '2019-06-15 17:57:21', 'Menunggu', NULL);
+(71, 'LPR-0065', 26, 'Layanan', '/uploads/lapor/2019-06-15T105719924Z.jpeg', 'Kopine larang lur', -7.474758238132547, 112.43013381958008, 'Kedung Kwali Gang 7, Mojokerto Kota 61322, Indonesia', 'Prajurit Kulon', '2019-06-15 17:57:21', 'Menunggu', NULL),
+(72, 'LPR-0066', 26, 'Infrastruktur', '/uploads/lapor/2019-06-22T085821225Z.jpeg', 'pasang surut', -7.704733848333333, 113.47746276833334, 'Probolinggo Kabupaten 67291, Indonesia', 'Paiton', '2019-06-22 15:58:21', 'Menunggu', NULL),
+(73, 'LPR-0067', 26, 'Lalu Lintas', '/uploads/lapor/2019-06-22T100020437Z.jpeg', 'dfg', -7.7039432525, 113.47815704333334, 'Probolinggo Kabupaten 67291, Indonesia', 'Paiton', '2019-06-22 17:00:20', 'Menunggu', NULL),
+(74, 'LPR-0068', 29, 'Angkutan Umum', '/uploads/lapor/2019-06-22T140939384Z.jpeg', 'A', -7.962215900277778, 112.61051177972222, 'Jalan Bendungan Nawangan, Malang Kota 65145, Indonesia', 'Lowokwaru', '2019-06-22 21:09:41', 'Menunggu', NULL),
+(76, 'LPR-0070', 29, 'Perparkiran', '/uploads/lapor/2019-06-22T141229348Z.jpeg', 'Teslagi', -7.478899817908531, 112.44935989379884, 'Jalan Griya Permata Meri, Mojokerto Kabupaten 61364, Indonesia', 'Mojoanyar', '2019-06-22 21:12:29', 'Menunggu', NULL),
+(77, 'LPR-0071', 29, 'Pengendalian Operasi', '/uploads/lapor/2019-06-22T141321800Z.jpeg', 'Ts3', -7.962215900277778, 112.61051177972222, 'Jalan Bendungan Nawangan, Malang Kota 65145, Indonesia', 'Lowokwaru', '2019-06-22 21:13:21', 'Menunggu', NULL),
+(78, 'LPR-0072', 29, 'Pengendalian Operasi', '/uploads/lapor/2019-06-22T142026619Z.jpeg', 'Maling sandal', -7.480431624490708, 112.44386672973634, 'Mojokerto Kabupaten 61363, Indonesia', 'Puri', '2019-06-22 21:20:27', 'Menunggu', NULL),
+(79, 'LPR-0073', 29, 'Layanan', '/uploads/lapor/2019-06-22T142607045Z.jpeg', 'Kucing liar anakan kasian, monggo yang mau adopt. ', -7.481282625824016, 112.44283676147462, 'Jalan Lombok, Mojokerto Kabupaten 61363, Indonesia', 'Puri', '2019-06-22 21:26:08', 'Proses', NULL),
+(80, 'LPR-0074', 29, 'Angkutan Umum', '/uploads/lapor/2019-06-22T143814791Z.jpeg', 'Tes', -7.471921519906578, 112.44832992553712, 'Jalan Raya Meri, Mojokerto Kota 61315, Indonesia', 'Magersari', '2019-06-22 21:38:15', 'Menunggu', NULL);
 
 -- --------------------------------------------------------
 
@@ -432,7 +417,12 @@ INSERT INTO `notifikasi` (`id_notifikasi`, `id_user_notifikasi`, `id_user_notifi
 (6, 29, 26, 66, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0060', '2019-06-03 21:56:08', 'Aktif'),
 (7, 29, 26, 67, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0061', '2019-06-03 21:56:51', 'Aktif'),
 (12, 29, 26, 67, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0061', '2019-06-03 22:00:22', 'Aktif'),
-(19, 29, 20, 67, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0061', '2019-06-03 22:41:31', 'Aktif');
+(19, 29, 20, 67, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0061', '2019-06-03 22:41:31', 'Tidak Aktif'),
+(21, 29, 30, 67, 'Komentar', 'Anda mendapat komentar baru pada laporan LPR-0061', '2019-06-22 15:09:42', 'Tidak Aktif'),
+(22, 29, 30, 68, 'Laporan Keluhan', 'Laporan LPR-0062 telah diproses', '2019-06-22 15:21:26', 'Tidak Aktif'),
+(23, 29, 30, 67, 'Laporan Keluhan', 'Laporan LPR-0061 telah Selesai', '2019-06-22 15:22:17', 'Tidak Aktif'),
+(24, 26, 30, 6, 'Izin Penggunaan Jalan', 'Izin Penggunaan Jalan IZN-0005 telah Selesai', '2019-06-22 15:30:00', 'Aktif'),
+(25, 29, 30, 79, 'Laporan Keluhan', 'Laporan LPR-0073 telah Diproses', '2019-06-23 18:41:13', 'Aktif');
 
 -- --------------------------------------------------------
 
@@ -466,13 +456,7 @@ INSERT INTO `pertanyaan` (`id_pertanyaan`, `pertanyaan`) VALUES
 (137, 'tes4'),
 (139, 'tes5'),
 (150, 'tes6'),
-(151, 'tes7'),
-(157, 'tes8'),
-(158, 'tes9'),
-(159, 'tes9'),
-(160, 'tes10'),
-(165, 'tes11'),
-(166, 'tes12');
+(151, 'tes7');
 
 -- --------------------------------------------------------
 
@@ -533,7 +517,15 @@ INSERT INTO `survey` (`id_survey`, `id_user_survey`, `id_pertanyaan_survey`, `id
 (13, 26, 21, 25, '2019-06-14 21:30:14'),
 (14, 26, 27, 50, '2019-06-14 21:30:14'),
 (15, 26, 28, 54, '2019-06-14 21:30:14'),
-(16, 26, 124, 342, '2019-06-14 21:30:14');
+(16, 26, 124, 342, '2019-06-14 21:30:14'),
+(25, 29, 2, 7, '2019-06-23 20:25:47'),
+(26, 29, 3, 11, '2019-06-23 20:25:47'),
+(27, 29, 4, 15, '2019-06-23 20:25:47'),
+(28, 29, 27, 52, '2019-06-23 20:25:47'),
+(29, 29, 20, 24, '2019-06-23 20:25:47'),
+(30, 29, 21, 28, '2019-06-23 20:25:47'),
+(31, 29, 124, 344, '2019-06-23 20:25:47'),
+(32, 29, 28, 55, '2019-06-23 20:25:47');
 
 -- --------------------------------------------------------
 
@@ -573,39 +565,27 @@ CREATE TABLE `user` (
   `telp_user` varchar(15) NOT NULL,
   `foto_user` varchar(255) DEFAULT NULL,
   `email_user` varchar(50) NOT NULL,
-  `pass_user` varchar(255) NOT NULL
+  `pass_user` varchar(255) NOT NULL,
+  `is_admin` varchar(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id_user`, `nama_user`, `alamat_user`, `tgl_lahir_user`, `telp_user`, `foto_user`, `email_user`, `pass_user`) VALUES
-(1, 'NRKNRK brooo', 'Candi', '1990-12-12', '1243245435', '/uploads/user/2019-05-19T174742226Z.jpeg', 'nrk2112@nrk.com', 'sjdhkldslfnsdfl'),
-(3, 'NRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk@nrk.com', 'sjdhkldslfnsdfl'),
-(5, 'NRK22', 'Candi', '1990-12-12', '1243245435', '', 'nrk@nrk.com', 'sjdhkldslfnsdfl'),
-(6, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2@nrk.com', 'sjdhkldslfnsdfl'),
-(7, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(8, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(9, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(10, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(12, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(13, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2213323@nrk.com', 'sjdhkldslfnsdfl'),
-(14, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk22133231@nrk.com', 'sjdhkldslfnsdfl'),
-(15, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk221332312@nrk.com', 'sjdhkldslfnsdfl'),
-(16, 'NRKNRK', 'Candi', '1990-12-12', '1243245435', '', 'nrk2112@nrk.com', 'sjdhkldslfnsdfl'),
-(17, 'NRKNRK brooo', 'Candi', '1990-12-12', '1243245435', '', 'nrk2111@nrk.com', 'sjdhkldslfnsdfl'),
-(18, 'nizarrk', 'Candi', '1990-12-12', '1243245435', '', 'nizar@nizar.com', '$2b$10$kTPUQSSYhvOMm2YmT3mR6ufh1BdMyvleHj4NaJo8g8c'),
-(20, 'nizarrk', 'Candi', '1990-12-12', '1243245435', '/uploads/user/2019-05-19T131658588Z.png', 'niezar.rk@gmail.com', '$2b$10$q2mS4IZKmHqcfURkt0boGeRhsDKO8/LPP4vxBXlkanfZ3S5sgKKvi'),
-(21, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'uploads\\user\\2019-05-19T131658588Z.png', 'niezar.rk@gmail.comm', '$2b$10$MzCEhJZj/tlnCmRxgBjZ0OX4oZhUgsM.jFinu7OvYhUDK5GyRbTfG'),
-(22, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'NRK-PCuploads\\user\\2019-05-19T172133218Z.jpeg', 'niezarr.rk@gmail.comm', '$2b$10$c.p3EzOzFV0SxfhKa9er.eVaBK.XRMTSHNeGWjA6fATaFPBL1Vhfi'),
-(23, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000uploads\\user\\2019-05-19T172824463Z.jpeg', 'niezarsr.rk@gmail.comm', '$2b$10$5k/w8UyGP7MGueB3lAqvUeQoBFdMgF3YdY2DA6NhoDJyGLYBjVUxm'),
-(24, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000/uploads\\user\\2019-05-19T173224499Z.jpeg', 'niezarsdsar.rk@gmail.comm', '$2b$10$dOdxpRPRVJcOgus2IOILBe4ky68.acDtJYy.56Gw.Mm1BwLNJxppe'),
-(25, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000/uploads/user/2019-05-19T174742226Z.jpeg', 'niezarswdsar.rk@gmail.comm', '$2b$10$kj4NxFa.fhU/GyDiH5vqgedyRpl/HRtOmEkcVtra3y5uFZKCG/.eC'),
-(26, 'Nizar Rahman K', 'Jl. Candi 2A 454 Sukun Malang', '1995-11-05', '081233763055', '/uploads/user/2019-05-22T072126644Z.jpeg', 'nizarkusworo@gmail.com', '$2b$10$RSSbqeuV5UmqzIS5KYXIO.4fch8hcNqvZXKOXhK/r0IkTLeV4di.6'),
-(27, 'NRKNRK', 'sadsa', '2014-04-30', '213', '/uploads/user/defaultuser.jpg', 'nrknrk@nrk.com', '$2b$10$kvxEkqg1tUB20horxniMieYm7sV./uLM6iQccVIc85QoykXJLICXe'),
-(28, 'NRK Channel', 'Youtube', '2014-04-30', '098776643', '/uploads/user/2019-05-27T081659046Z.png', 'nrk@channel.com', '$2b$10$x5KkXSS.X2w7ehooEaFhOOPzcwRhGRQe5PI7cXDGdGOJeMTzdokKm'),
-(29, 'Rahman K', 'Jl. Candi 2A 454 Karang Besuki Sukun', '1990-01-01', '089786466543', '/uploads/user/2019-05-28T130117896Z.jpeg', 'rk@gmail.com', '$2b$10$0O.UJ9cDM..McDczckPQ1eEvqDIfoEc1TQbX4BOLv542aQydxNdym');
+INSERT INTO `user` (`id_user`, `nama_user`, `alamat_user`, `tgl_lahir_user`, `telp_user`, `foto_user`, `email_user`, `pass_user`, `is_admin`) VALUES
+(1, 'NRKNRK brooo', 'Candi', '1990-12-12', '1243245435', '/uploads/user/2019-05-19T174742226Z.jpeg', 'nrk2112@nrk.com', 'sjdhkldslfnsdfl', NULL),
+(20, 'nizarrk', 'Candi', '1990-12-12', '1243245435', '/uploads/user/2019-05-19T131658588Z.png', 'niezar.rk@gmail.com', '$2b$10$q2mS4IZKmHqcfURkt0boGeRhsDKO8/LPP4vxBXlkanfZ3S5sgKKvi', NULL),
+(21, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'uploads\\user\\2019-05-19T131658588Z.png', 'niezar.rk@gmail.comm', '$2b$10$MzCEhJZj/tlnCmRxgBjZ0OX4oZhUgsM.jFinu7OvYhUDK5GyRbTfG', NULL),
+(22, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'NRK-PCuploads\\user\\2019-05-19T172133218Z.jpeg', 'niezarr.rk@gmail.comm', '$2b$10$c.p3EzOzFV0SxfhKa9er.eVaBK.XRMTSHNeGWjA6fATaFPBL1Vhfi', NULL),
+(23, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000uploads\\user\\2019-05-19T172824463Z.jpeg', 'niezarsr.rk@gmail.comm', '$2b$10$5k/w8UyGP7MGueB3lAqvUeQoBFdMgF3YdY2DA6NhoDJyGLYBjVUxm', NULL),
+(24, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000/uploads\\user\\2019-05-19T173224499Z.jpeg', 'niezarsdsar.rk@gmail.comm', '$2b$10$dOdxpRPRVJcOgus2IOILBe4ky68.acDtJYy.56Gw.Mm1BwLNJxppe', NULL),
+(25, 'nizarrk yoi', 'Candi23', '1990-12-12', '1243245435', 'http://localhost:3000/uploads/user/2019-05-19T174742226Z.jpeg', 'niezarswdsar.rk@gmail.comm', '$2b$10$kj4NxFa.fhU/GyDiH5vqgedyRpl/HRtOmEkcVtra3y5uFZKCG/.eC', NULL),
+(26, 'Nizar Rahman K', 'Jl. Candi 2A 454 Sukun Malang', '1995-11-05', '081233763055', '/uploads/user/2019-06-23T150716245Z.jpeg', 'nizarkusworo@gmail.com', '$2b$10$RSSbqeuV5UmqzIS5KYXIO.4fch8hcNqvZXKOXhK/r0IkTLeV4di.6', NULL),
+(27, 'NRKNRK', 'Malang', '2014-04-30', '213', '/uploads/user/defaultuser.jpg', 'nrknrk@nrk.com', '$2b$10$kvxEkqg1tUB20horxniMieYm7sV./uLM6iQccVIc85QoykXJLICXe', NULL),
+(28, 'NRK Channel', 'Youtube', '2014-04-30', '098776643', '/uploads/user/2019-05-27T081659046Z.png', 'nrk@channel.com', '$2b$10$x5KkXSS.X2w7ehooEaFhOOPzcwRhGRQe5PI7cXDGdGOJeMTzdokKm', NULL),
+(29, 'Rahman', 'Jl. Candi 2A 454 Karang Besuki Sukun', '1990-01-01', '089786466543', '/uploads/user/2019-06-23T034953007Z.jpeg', 'rk@gmail.com', '$2b$10$0O.UJ9cDM..McDczckPQ1eEvqDIfoEc1TQbX4BOLv542aQydxNdym', NULL),
+(30, 'Admin', 'admin', '2019-06-04', 'admin', '/uploads/user/2019-05-28T125209196Z.png', 'admin', '$2a$10$DUVlcI6XwN.F21JRJBAMt.Ss4xxdfNfyNYD54G2iOOyLCvCLLcNQW', 'true');
 
 -- --------------------------------------------------------
 
@@ -628,7 +608,6 @@ INSERT INTO `vote` (`id_vote`, `id_lapor_vote`, `id_user_vote`, `tgl_vote`) VALU
 (1, 67, 26, '2019-06-20 11:28:24'),
 (2, 66, 26, '2019-06-12 11:27:21'),
 (4, 64, 29, '2019-06-02 13:26:04'),
-(21, 63, 29, '2019-06-02 15:01:34'),
 (32, 66, 20, '2019-06-02 15:07:29'),
 (37, 67, 20, '2019-06-02 16:26:30'),
 (42, 67, 29, '2019-06-02 16:33:10'),
@@ -754,19 +733,19 @@ ALTER TABLE `info`
 -- AUTO_INCREMENT for table `izin`
 --
 ALTER TABLE `izin`
-  MODIFY `id_izin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_izin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `jawaban`
 --
 ALTER TABLE `jawaban`
-  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=497;
+  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
 
 --
 -- AUTO_INCREMENT for table `komentar`
 --
 ALTER TABLE `komentar`
-  MODIFY `id_komentar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id_komentar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `kritiksaran`
@@ -778,25 +757,25 @@ ALTER TABLE `kritiksaran`
 -- AUTO_INCREMENT for table `lapor`
 --
 ALTER TABLE `lapor`
-  MODIFY `id_lapor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id_lapor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-  MODIFY `id_notifikasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_notifikasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `pertanyaan`
 --
 ALTER TABLE `pertanyaan`
-  MODIFY `id_pertanyaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
+  MODIFY `id_pertanyaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT for table `survey`
 --
 ALTER TABLE `survey`
-  MODIFY `id_survey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_survey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `trayek`
@@ -808,7 +787,7 @@ ALTER TABLE `trayek`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `vote`
