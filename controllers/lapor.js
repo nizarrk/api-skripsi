@@ -24,7 +24,7 @@ const ConvertDMSToDD = (degrees, minutes, seconds, direction) => {
   return dd;
 }
 
-router.get('/searchloc/:cari', async (req, res) => {
+router.get('/searchloc/:cari', verifyToken, async (req, res) => {
   try {
     let cari = '%' +   req.params.cari + '%';
     console.log(cari);
@@ -44,12 +44,16 @@ router.get('/searchloc/:cari', async (req, res) => {
   }
 });
 
-router.get('/getall', async (req, res) => {
+router.get('/getall', verifyToken, async (req, res) => {
   try {
     let query = `SELECT *, (SELECT COUNT(komentar.id_komentar) FROM komentar WHERE
                  komentar.id_lapor_komentar = lapor.id_lapor) AS total_komentar, 
                  (SELECT COUNT(vote.id_vote) FROM vote WHERE vote.id_lapor_vote = lapor.id_lapor) 
-                 AS total_vote FROM lapor INNER JOIN user ON lapor.id_user_lapor = user.id_user 
+                 AS total_vote, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = 'Menunggu') 
+                 AS total_menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = 'Proses') 
+                 AS total_proses, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = 'Selesai') 
+                 AS total_selesai, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = 'Ditolak') 
+                 AS total_ditolak FROM lapor INNER JOIN user ON lapor.id_user_lapor = user.id_user 
                  ORDER BY id_lapor DESC`;
 
     let result = await db.query (query);
@@ -60,9 +64,9 @@ router.get('/getall', async (req, res) => {
   }
 });
 
-router.get('/getid/:id', async (req, res) => {
+router.get('/getid/:id', verifyToken, async (req, res) => {
   try {
-    let query = `SELECT id_lapor FROM lapor WHERE id_lapor = ?`;
+    let query = `SELECT id_lapor, kode_lapor, id_user_lapor FROM lapor WHERE id_lapor = ?`;
 
     let result = await db.query (query, [req.params.id]);
     response.ok(result, res);
@@ -72,7 +76,7 @@ router.get('/getid/:id', async (req, res) => {
   }
 });
 
-router.put('/status/:id', async (req, res) => {
+router.put('/status/:id', verifyToken, async (req, res) => {
   try {
       let query = await db.query('UPDATE lapor SET status_lapor = ?, pesan_tolak_lapor = ? WHERE id_lapor = ?', 
       [req.body.status, req.body.pesan, req.params.id]);
@@ -118,13 +122,28 @@ router.delete('/vote/:id', async (req, res) => {
 
 router.get('/', verifyToken, async (req, res) => {
   try {
-    let query = `SELECT lapor.id_lapor, lapor.kode_lapor, lapor.id_user_lapor, lapor.kat_lapor, lapor.foto_lapor,
-                lapor.desk_lapor, lapor.lat_lapor, lapor.long_lapor, lapor.lokasi_lapor, 
-                lapor.tgl_lapor, lapor.status_lapor, user.nama_user, user.foto_user, 
-                (SELECT COUNT(komentar.id_komentar) FROM komentar WHERE komentar.id_lapor_komentar = lapor.id_lapor)
-                AS total_komentar, (SELECT COUNT(vote.id_vote) FROM vote WHERE vote.id_lapor_vote = lapor.id_lapor)
-                AS total_vote, (SELECT COUNT(vote.id_vote) FROM vote WHERE vote.id_lapor_vote = lapor.id_lapor  AND vote.id_user_vote = ?)
-                AS pernah_vote, vote.id_vote FROM lapor INNER JOIN user ON lapor.id_user_lapor = user.id_user LEFT JOIN vote ON vote.id_lapor_vote = lapor.id_lapor AND vote.id_user_vote = ? ORDER BY id_lapor DESC`;
+    let query = `SELECT 
+                    lapor.id_lapor, lapor.kode_lapor, lapor.id_user_lapor, lapor.kat_lapor, lapor.foto_lapor,
+                    lapor.desk_lapor, lapor.lat_lapor, lapor.long_lapor, lapor.lokasi_lapor, 
+                    lapor.tgl_lapor, lapor.status_lapor, user.nama_user, user.foto_user, 
+                    (SELECT COUNT(komentar.id_komentar) FROM komentar WHERE komentar.id_lapor_komentar = lapor.id_lapor)
+                    AS total_komentar, (SELECT COUNT(vote.id_vote) FROM vote WHERE vote.id_lapor_vote = lapor.id_lapor)
+                    AS total_vote, (SELECT COUNT(vote.id_vote) FROM vote WHERE vote.id_lapor_vote = lapor.id_lapor  AND vote.id_user_vote = ?)
+                    AS pernah_vote, vote.id_vote 
+                FROM 
+                    lapor 
+                INNER JOIN 
+                    user 
+                ON 
+                    lapor.id_user_lapor = user.id_user 
+                LEFT JOIN 
+                    vote 
+                ON 
+                    vote.id_lapor_vote = lapor.id_lapor AND vote.id_user_vote = ? 
+                WHERE NOT 
+                    lapor.status_lapor = 'Ditolak'
+                ORDER BY 
+                    id_lapor DESC`;
     let result = await db.query(query, [req.user.userId, req.user.userId]);
     response.ok(result, res);
   } catch (error) {
@@ -145,7 +164,7 @@ router.get('/laporku', verifyToken, async (req, res) => {
 
 router.get('/:id', verifyToken, async (req, res) => {
   try {
-    let query = `SELECT lapor.id_lapor, lapor.id_user_lapor, lapor.kode_lapor, user.nama_user, user.foto_user, lapor.kat_lapor, lapor.foto_lapor, lapor.desk_lapor, lapor.lat_lapor, lapor.long_lapor, lapor.lokasi_lapor,  lapor.tgl_lapor, lapor.status_lapor,
+    let query = `SELECT lapor.id_lapor, lapor.id_user_lapor, lapor.kode_lapor, user.nama_user, user.foto_user, lapor.kat_lapor, lapor.foto_lapor, lapor.desk_lapor, lapor.lat_lapor, lapor.long_lapor, lapor.lokasi_lapor,  lapor.tgl_lapor, lapor.status_lapor, lapor.pesan_tolak_lapor,
               (SELECT komentar.id_komentar FROM user LEFT JOIN komentar ON komentar.id_user_komentar = user.id_user INNER JOIN lapor ON komentar.id_lapor_komentar = lapor.id_lapor AND lapor.id_lapor = ? ORDER BY komentar.id_komentar DESC LIMIT 1 ) AS id_komentar,
               (SELECT user.id_user FROM user LEFT JOIN komentar ON komentar.id_user_komentar = user.id_user INNER JOIN lapor ON komentar.id_lapor_komentar = lapor.id_lapor AND lapor.id_lapor = ? ORDER BY komentar.id_komentar DESC LIMIT 1 ) AS id_komentator,
               (SELECT user.nama_user FROM user LEFT JOIN komentar ON komentar.id_user_komentar = user.id_user INNER JOIN lapor ON komentar.id_lapor_komentar = lapor.id_lapor AND lapor.id_lapor = ? ORDER BY komentar.id_komentar DESC LIMIT 1 ) AS nama_komentator,

@@ -8,7 +8,7 @@ const verifyToken = require('../helper/verify-token');
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 router.use(bodyParser.json({ limit: "50mb" }));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT * FROM komentar INNER JOIN lapor ON 
                     komentar.id_lapor_komentar = lapor.id_lapor AND komentar.id_lapor_komentar = ? 
@@ -69,19 +69,5 @@ router.get('/getid/:id', verifyToken, async (req, res) => {
         response.fail(error.message, res);
     }
 });
-
-router.get('/getkomen/:id', async (req, res) => {
-    try {
-        let query = `SELECT id_komentar, id_user_komentar, id_lapor_komentar, desk_komentar, tgl_komentar,
-                    nama_user, foto_user FROM komentar INNER JOIN lapor ON 
-                    komentar.id_lapor_komentar = lapor.id_lapor AND komentar.id_lapor_komentar = ?
-                    INNER JOIN user ON komentar.id_user_komentar = user.id_user`;
-        let result = await db.query(query, [req.params.id]);
-        response.ok(result, res);
-    } catch (error) {
-        response.fail(error.message, res);
-    }
-});
-
 
 module.exports = router;

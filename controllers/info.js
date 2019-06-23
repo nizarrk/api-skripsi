@@ -10,7 +10,7 @@ const verifyToken = require('../helper/verify-token');
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 router.use(bodyParser.json({ limit: "50mb" }));
 
-router.get('/trayek', async (req, res) => {
+router.get('/trayek', verifyToken, async (req, res) => {
     try {
         let result = await db.query('SELECT * FROM trayek ORDER BY id_trayek DESC');
         response.ok(result, res);        
@@ -20,7 +20,7 @@ router.get('/trayek', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
         let result = await db.query('SELECT * FROM info ORDER BY id_info DESC');
         response.ok(result, res);
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         let result = await db.query('SELECT * FROM info WHERE id_info = ?', 
         [req.params.id]);
@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.get('/trayek/:id', async (req, res) => {
+router.get('/trayek/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT * FROM trayek WHERE id_trayek = ?`;
         let id = req.params.id;
@@ -51,7 +51,7 @@ router.get('/trayek/:id', async (req, res) => {
     }
 });
 
-router.post('/trayek', async (req, res) => {
+router.post('/trayek', verifyToken, async (req, res) => {
     try {
         let nama = req.body.nama;
         let rute = req.body.rute;
@@ -70,7 +70,7 @@ router.post('/trayek', async (req, res) => {
     }
 });
 
-router.put('/trayek', async (req, res) => {
+router.put('/trayek', verifyToken, async (req, res) => {
     try {
         console.log(req.body);
         let id = req.body.id;
@@ -91,7 +91,7 @@ router.put('/trayek', async (req, res) => {
     }
 });
 
-router.delete('/trayek/:id', async (req, res) => {
+router.delete('/trayek/:id', verifyToken, async (req, res) => {
     try {
         let id = req.params.id;
 
@@ -102,7 +102,7 @@ router.delete('/trayek/:id', async (req, res) => {
     }
 });
 
-router.post('/', upload.single('fotoInfo'), async (req, res) => {
+router.post('/', verifyToken, upload.single('fotoInfo'), async (req, res) => {
     try {
         let path = req.file.path.replace(/\\/g, "/");
 
@@ -124,7 +124,7 @@ router.post('/', upload.single('fotoInfo'), async (req, res) => {
     }
 });
 
-router.put('/', upload.single('fotoInfo'), async (req, res) => {
+router.put('/', verifyToken, upload.single('fotoInfo'), async (req, res) => {
     try {
         let id = req.body.id;
         let judul = req.body.judul;
@@ -158,7 +158,7 @@ router.put('/', upload.single('fotoInfo'), async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
     try {
         let id = req.params.id;
 

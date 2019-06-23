@@ -11,9 +11,21 @@ const customID = require('../helper/custom-id');
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 router.use(bodyParser.json({ limit: "50mb" }));
 
-router.get('/getall', async (req, res) => {
+router.get('/getall', verifyToken, async (req, res) => {
     try {
-        let query = `SELECT * FROM izin INNER JOIN user ON izin.id_user_izin = user.id_user
+        let query = `SELECT 
+                        *, 
+                        (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.status_izin = 'Menunggu') 
+                        AS total_menunggu, (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.status_izin = 'Proses') 
+                        AS total_proses, (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.status_izin = 'Selesai') 
+                        AS total_selesai, (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.status_izin = 'Ditolak') 
+                        AS total_ditolak 
+                     FROM 
+                        izin 
+                    INNER JOIN 
+                        user 
+                    ON 
+                        izin.id_user_izin = user.id_user
                      ORDER BY id_izin DESC`;
         let result = await db.query(query);
         response.ok(result, res);
@@ -23,7 +35,7 @@ router.get('/getall', async (req, res) => {
     }
 });
 
-router.get('/getall/:id', async (req, res) => {
+router.get('/getall/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT * FROM izin INNER JOIN user ON izin.id_user_izin = user.id_user
                      AND izin.id_izin = ? ORDER BY id_izin DESC`;
@@ -97,7 +109,7 @@ router.post('/', verifyToken, upload.fields([{name: 'fotoSurat'}, {name: 'fotoKT
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
     try {
         let query = await db.query('UPDATE izin SET status_izin = ?, pesan_tolak_izin = ? WHERE id_izin = ?', 
         [req.body.status, req.body.pesan, req.params.id]);

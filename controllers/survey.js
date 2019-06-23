@@ -8,7 +8,44 @@ const verifyToken = require('../helper/verify-token');
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 router.use(bodyParser.json({ limit: "50mb" }));
 
-router.get('/list', async (req, res) => {
+router.get('/hasil', verifyToken, async (req, res) => {
+    try {
+        let query = `SELECT 
+                        id_pertanyaan_survey, pertanyaan_survey,
+                        MAX( if( kode_jawaban = 'A', id_jawaban_survey, 0 ) ) AS id_jawaban1,
+                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) AS point_jawaban1,
+                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) AS total_jawaban1,
+                        MAX( if( kode_jawaban = 'B', id_jawaban_survey, 0 ) ) AS id_jawaban2,
+                        SUM( if( kode_jawaban = 'B', 2, 0 ) ) AS point_jawaban2,
+                        SUM( if( kode_jawaban = 'B', 1, 0 ) ) AS total_jawaban2,
+                        MAX( if( kode_jawaban = 'C', id_jawaban_survey, 0 ) ) AS id_jawaban3,
+                        SUM( if( kode_jawaban = 'C', 3, 0 ) ) AS point_jawaban3,
+                        SUM( if( kode_jawaban = 'C', 1, 0 ) ) AS total_jawaban3,
+                        MAX( if( kode_jawaban = 'D', id_jawaban_survey, 0 ) ) AS id_jawaban4,
+                        SUM( if( kode_jawaban = 'D', 4, 0 ) ) AS point_jawaban4,
+                        SUM( if( kode_jawaban = 'D', 1, 0 ) ) AS total_jawaban4,
+                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) + if( kode_jawaban = 'B', 2, 0 ) + if( kode_jawaban = 'C', 3, 0 ) + if( kode_jawaban = 'D', 4, 0 ) AS jumlah_point 
+                    FROM 
+                        (SELECT a.id_pertanyaan_survey, a.id_user_survey, a.id_jawaban_survey, c.jawaban_survey, c.kode_jawaban, d.pertanyaan_survey
+                    FROM survey a  
+                    INNER JOIN jawaban_survey c 
+                            ON a.id_pertanyaan_survey = c.id_pertanyaan_survey_jawaban
+                            AND a.id_jawaban_survey = c.id_jawaban_survey
+                    INNER JOIN pertanyaan_survey d
+                        ON d.id_pertanyaan_survey = a.id_pertanyaan_survey 
+                    ) a 
+                    GROUP BY 
+                        id_pertanyaan_survey`;
+        
+        let result = await db.query(query);
+        response.ok(result, res);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({message: error.message});
+    }
+});
+
+router.get('/list', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
@@ -35,7 +72,7 @@ router.get('/list', async (req, res) => {
     }
 });
 
-router.post('/submit', verifyToken, async (req, res) => {
+router.post('/submit', verifyToken, verifyToken, async (req, res) => {
     try {
         let query = `INSERT INTO survey (id_user_survey, id_pertanyaan_survey, id_jawaban_survey, tgl_survey)
                      VALUES (?,?,?,?)`;
@@ -47,7 +84,7 @@ router.post('/submit', verifyToken, async (req, res) => {
     }
 });
 
-router.get('/list/:id', async (req, res) => {
+router.get('/list/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
@@ -76,7 +113,7 @@ router.get('/list/:id', async (req, res) => {
     }
 });
 
-router.put('/list', async (req, res) => {
+router.put('/list', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -109,7 +146,7 @@ router.put('/list', async (req, res) => {
     }
 });
 
-router.delete('/list', async (req, res) => {
+router.delete('/list', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -134,7 +171,7 @@ router.delete('/list', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
@@ -161,7 +198,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
@@ -190,7 +227,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
     try {        
         let result = await db.query('INSERT INTO pertanyaan (pertanyaan) VALUES (?)', [req.body.pertanyaan]);
         response.ok(result, res);
@@ -200,7 +237,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
     try {
         let result = await db.query('UPDATE pertanyaan SET pertanyaan.pertanyaan = ? WHERE pertanyaan.id_pertanyaan = ?', 
         [req.body.params]);
@@ -211,7 +248,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.post('/jawaban', async (req, res) => {
+router.post('/jawaban', verifyToken, async (req, res) => {
     try {
         let result = await db.query('INSERT INTO jawaban (id_pertanyaan_jawaban, jawaban, kode_jawaban) VALUES (?,?,?)', [req.body.id, req.body.jawaban, req.body.kode]);
         response.ok(result, res);
@@ -221,7 +258,7 @@ router.post('/jawaban', async (req, res) => {
     }
 });
 
-router.post('/addall', async (req, res) => {
+router.post('/addall', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -249,7 +286,7 @@ router.post('/addall', async (req, res) => {
     }
 });
 
-router.post('/addsurvey', async (req, res) => {
+router.post('/addsurvey', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -279,7 +316,7 @@ router.post('/addsurvey', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -312,7 +349,7 @@ router.put('/', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -337,7 +374,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.delete('/list/:id', async (req, res) => {
+router.delete('/list/:id', verifyToken, async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }

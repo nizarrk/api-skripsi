@@ -8,7 +8,7 @@ const verifyToken = require('../helper/verify-token');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
         let query = `SELECT kritiksaran.id_kritiksaran, kritiksaran.rate_kritiksaran, kritiksaran.desk_kritiksaran,
                     kritiksaran.tgl_kritiksaran, user.id_user, user.nama_user FROM kritiksaran INNER JOIN user
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         let id = req.body.id;
 

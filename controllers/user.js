@@ -59,19 +59,21 @@ router.post('/login', async (req, res) => {
     try {
         let email = req.body.email;
         let pass = req.body.pass;
-
+        
         let result = await db.query('SELECT * FROM user where email_user = ?', [ email ]);
         let hashedPassword = result[0].pass_user;
+        
         const match = await bcrypt.compare(pass, hashedPassword);
         
         if (match) {
-            let token = jwt.sign({userId:result[0].id_user},key.tokenKey, {
+            let token = jwt.sign({userId:result[0].id_user, admin:result[0].is_admin},key.tokenKey, {
                 expiresIn: "1d" 
             });
             res.status(200).json({
                 userId:result[0].id_user,
                 email:result[0].email_user,
                 name:result[0].nama_user,
+                admin: result[0].is_admin,
                 token
             });
         } else {
@@ -111,12 +113,13 @@ router.get('/profile', verifyToken, async (req, res) => {
                     (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.id_user_lapor = ?) AS total_lapor, 
                     (SELECT COUNT(izin.status_izin) FROM izin WHERE izin.id_user_izin = ?) AS total_izin,
                     (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Menunggu" 
-                    AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor 
+                    AND lapor.id_user_lapor = ?) AS menunggu, (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Ditolak" 
+                    AND lapor.id_user_lapor = ?) AS ditolak, (SELECT COUNT(lapor.status_lapor) FROM lapor 
                     WHERE lapor.status_lapor = "Proses" AND lapor.id_user_lapor = ?) AS proses, 
                     (SELECT COUNT(lapor.status_lapor) FROM lapor WHERE lapor.status_lapor = "Selesai" 
                     AND lapor.id_user_lapor = ?) AS selesai, (SELECT COUNT(survey.id_user_survey) 
-                    FROM survey WHERE survey.id_user_survey = ?) AS total_survey FROM user WHERE user.id_user = ? GROUP BY user.id_user`
-        let result = await db.query(query, [ id, id, id, id, id, id, id ]);
+                    FROM survey WHERE survey.id_user_survey = ? AND YEAR(tgl_survey) = YEAR(CURDATE())) AS total_survey FROM user WHERE user.id_user = ? GROUP BY user.id_user`
+        let result = await db.query(query, [ id, id, id, id, id, id, id, id ]);
         response.ok(result, res);
         
     } catch (error) {
