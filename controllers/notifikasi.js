@@ -67,9 +67,9 @@ router.post('/', verifyToken, async (req, res) => {
     try {
         let query = `INSERT INTO 
                         notifikasi 
-                        (id_user_notifikasi, id_user_notifikator, id_lapor_notifikasi, tipe_notifikasi, desk_notifikasi, tgl_notifikasi, status_notifikasi) 
+                        (id_user_notifikasi, id_user_notifikator, tipe_notifikasi, desk_notifikasi, tgl_notifikasi, status_notifikasi) 
                     VALUES (?,?,?,?,?,?,?)`;
-        let result = await db.query(query, [req.body.user, req.body.id, req.body.lapor, req.body.tipe, req.body.desk, new Date(), req.body.status]);
+        let result = await db.query(query, [req.body.user, req.body.id, req.body.tipe, req.body.desk, new Date(), req.body.status]);
         response.ok(result, res);
     } catch (error) {
         console.log(error.message);
