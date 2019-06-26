@@ -16,6 +16,10 @@
     "url": "https://github.com/nizarrk/api-skripsi/issues"
   },
   "homepage": "https://github.com/nizarrk/api-skripsi#readme",
+
+  "engines": {
+    "node": "10.15.1"
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
