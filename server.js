@@ -12,6 +12,7 @@ const komentar = require('./controllers/komentar');
 const izin = require('./controllers/izin');
 const notifikasi = require('./controllers/notifikasi');
 const survey = require('./controllers/survey');
+const dashboard = require('./controllers/dashboard');
 
 
 app.use(cors());
@@ -31,6 +32,7 @@ app.use('/komentar', komentar);
 app.use('/izin', izin);
 app.use('/notif', notifikasi);
 app.use('/survey', survey);
+app.use('/dashboard', dashboard);
 app.use('/uploads', express.static('uploads'));
 
 app.use(bodyParser.urlencoded({ extended: true }));

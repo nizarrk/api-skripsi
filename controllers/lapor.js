@@ -288,13 +288,12 @@ router.post('/', verifyToken, upload.single('fotoLapor'), async (req, res) => {
     let tgl = new Date();
     let status = "Menunggu";
     
-    await db.query('INSERT INTO lapor (kode_lapor, id_user_lapor, kat_lapor, foto_lapor, desk_lapor, lat_lapor, long_lapor, lokasi_lapor, lokasi_kec_lapor, tgl_lapor, status_lapor) values (?,?,?,?,?,?,?,?,?,?,?)',
+    let result = await db.query('INSERT INTO lapor (kode_lapor, id_user_lapor, kat_lapor, foto_lapor, desk_lapor, lat_lapor, long_lapor, lokasi_lapor, lokasi_kec_lapor, tgl_lapor, status_lapor) values (?,?,?,?,?,?,?,?,?,?,?)',
             [ kode, userid, kat, fotoLapor, desk, lat, long, lokasi, district, tgl, status  ]);
 
-            response.ok("Berhasil menambahkan lapor!", res);
+            response.ok(result, res);
   } catch (error) {
-    console.log(error);
-    
+    console.log(error.response);
     res.status(500).json({message: error.message});
   }
 });

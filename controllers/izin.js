@@ -99,10 +99,10 @@ router.post('/', verifyToken, upload.fields([{name: 'fotoSurat'}, {name: 'fotoKT
         let tgl = new Date();
         let status = 'Menunggu';
 
-        await db.query('INSERT INTO izin (id_user_izin, kode_izin, surat_izin, ktp_izin, kk_izin, kegiatan_izin, lokasi_izin, tgl_mulai_izin, tgl_selesai_izin, jam_mulai_izin, jam_selesai_izin, tgl_izin, status_izin) values (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        let result = await db.query('INSERT INTO izin (id_user_izin, kode_izin, surat_izin, ktp_izin, kk_izin, kegiatan_izin, lokasi_izin, tgl_mulai_izin, tgl_selesai_izin, jam_mulai_izin, jam_selesai_izin, tgl_izin, status_izin) values (?,?,?,?,?,?,?,?,?,?,?,?,?)',
         [ iduser, kode, surat, ktp, kk, desk, loc, tglmulai, tglend, jammulai, jamend, tgl, status ]);
             
-        response.ok("Berhasil menambahkan izin!", res);
+        response.ok(result, res);
     } catch (error) {
         console.log(error.message);
         res.status(500).json({message: error.message});
