@@ -11,31 +11,31 @@ router.use(bodyParser.json({ limit: "50mb" }));
 router.get('/hasil', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
-                        id_pertanyaan_survey, pertanyaan_survey,
-                        MAX( if( kode_jawaban = 'A', id_jawaban_survey, 0 ) ) AS id_jawaban1,
-                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) AS point_jawaban1,
-                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) AS total_jawaban1,
-                        MAX( if( kode_jawaban = 'B', id_jawaban_survey, 0 ) ) AS id_jawaban2,
-                        SUM( if( kode_jawaban = 'B', 2, 0 ) ) AS point_jawaban2,
-                        SUM( if( kode_jawaban = 'B', 1, 0 ) ) AS total_jawaban2,
-                        MAX( if( kode_jawaban = 'C', id_jawaban_survey, 0 ) ) AS id_jawaban3,
-                        SUM( if( kode_jawaban = 'C', 3, 0 ) ) AS point_jawaban3,
-                        SUM( if( kode_jawaban = 'C', 1, 0 ) ) AS total_jawaban3,
-                        MAX( if( kode_jawaban = 'D', id_jawaban_survey, 0 ) ) AS id_jawaban4,
-                        SUM( if( kode_jawaban = 'D', 4, 0 ) ) AS point_jawaban4,
-                        SUM( if( kode_jawaban = 'D', 1, 0 ) ) AS total_jawaban4,
-                        SUM( if( kode_jawaban = 'A', 1, 0 ) ) + if( kode_jawaban = 'B', 2, 0 ) + if( kode_jawaban = 'C', 3, 0 ) + if( kode_jawaban = 'D', 4, 0 ) AS jumlah_point 
-                    FROM 
-                        (SELECT a.id_pertanyaan_survey, a.id_user_survey, a.id_jawaban_survey, c.jawaban_survey, c.kode_jawaban, d.pertanyaan_survey
-                    FROM survey a  
-                    INNER JOIN jawaban_survey c 
-                            ON a.id_pertanyaan_survey = c.id_pertanyaan_survey_jawaban
-                            AND a.id_jawaban_survey = c.id_jawaban_survey
-                    INNER JOIN pertanyaan_survey d
-                        ON d.id_pertanyaan_survey = a.id_pertanyaan_survey 
-                    ) a 
-                    GROUP BY 
-                        id_pertanyaan_survey`;
+                            id_pertanyaan_survey, pertanyaan_survey,
+                            MAX( if( kode_jawaban = 1, id_jawaban_survey, 0 ) ) AS id_jawaban1,
+                            SUM( if( kode_jawaban = 1, 1, 0 ) ) AS point_jawaban1,
+                            SUM( if( kode_jawaban = 1, 1, 0 ) ) AS total_jawaban1,
+                            MAX( if( kode_jawaban = 2, id_jawaban_survey, 0 ) ) AS id_jawaban2,
+                            SUM( if( kode_jawaban = 2, 2, 0 ) ) AS point_jawaban2,
+                            SUM( if( kode_jawaban = 2, 1, 0 ) ) AS total_jawaban2,
+                            MAX( if( kode_jawaban = 3, id_jawaban_survey, 0 ) ) AS id_jawaban3,
+                            SUM( if( kode_jawaban = 3, 3, 0 ) ) AS point_jawaban3,
+                            SUM( if( kode_jawaban = 3, 1, 0 ) ) AS total_jawaban3,
+                            MAX( if( kode_jawaban = 4, id_jawaban_survey, 0 ) ) AS id_jawaban4,
+                            SUM( if( kode_jawaban = 4, 4, 0 ) ) AS point_jawaban4,
+                            SUM( if( kode_jawaban = 4, 1, 0 ) ) AS total_jawaban4,
+                            SUM( kode_jawaban) AS jumlah_point 
+                        FROM 
+                            (SELECT a.id_pertanyaan_survey, a.id_user_survey, a.id_jawaban_survey, c.jawaban_survey, c.kode_jawaban, d.pertanyaan_survey
+                        FROM survey a  
+                        INNER JOIN jawaban_survey c 
+                                ON a.id_pertanyaan_survey = c.id_pertanyaan_survey_jawaban
+                                AND a.id_jawaban_survey = c.id_jawaban_survey
+                        INNER JOIN pertanyaan_survey d
+                            ON d.id_pertanyaan_survey = a.id_pertanyaan_survey 
+                        ) a 
+                        GROUP BY 
+                            id_pertanyaan_survey`;
         
         let result = await db.query(query);
         response.ok(result, res);
@@ -49,14 +49,14 @@ router.get('/list', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
-                        MAX( if( kode_jawaban = 'A', id_jawaban_survey, 0 ) ) AS id_jawaban1, 
-                        MAX( if( kode_jawaban = 'A', jawaban_survey, 0 ) ) AS jawaban1,
-                        MAX( if( kode_jawaban = 'B', id_jawaban_survey, 0 ) ) AS id_jawaban2,
-                        MAX( if( kode_jawaban = 'B', jawaban_survey, 0 ) ) AS jawaban2, 
-                        MAX( if( kode_jawaban = 'C', id_jawaban_survey, 0 ) ) AS id_jawaban3,
-                        MAX( if( kode_jawaban = 'C', jawaban_survey, 0 ) ) AS jawaban3, 
-                        MAX( if( kode_jawaban = 'D', id_jawaban_survey, 0 ) ) AS id_jawaban4,
-                        MAX( if( kode_jawaban = 'D', jawaban_survey, 0 ) ) AS jawaban4 
+                        MAX( if( kode_jawaban = 1, id_jawaban_survey, 0 ) ) AS id_jawaban1, 
+                        MAX( if( kode_jawaban = 1, jawaban_survey, 0 ) ) AS jawaban1,
+                        MAX( if( kode_jawaban = 2, id_jawaban_survey, 0 ) ) AS id_jawaban2,
+                        MAX( if( kode_jawaban = 2, jawaban_survey, 0 ) ) AS jawaban2, 
+                        MAX( if( kode_jawaban = 3, id_jawaban_survey, 0 ) ) AS id_jawaban3,
+                        MAX( if( kode_jawaban = 3, jawaban_survey, 0 ) ) AS jawaban3, 
+                        MAX( if( kode_jawaban = 4, id_jawaban_survey, 0 ) ) AS id_jawaban4,
+                        MAX( if( kode_jawaban = 4, jawaban_survey, 0 ) ) AS jawaban4 
                     FROM ( 
                         SELECT a.id_pertanyaan_survey, a.pertanyaan_survey, b.id_jawaban_survey, b.jawaban_survey, b.kode_jawaban
                         FROM pertanyaan_survey a 
@@ -88,14 +88,14 @@ router.get('/list/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
-                        MAX( if( kode_jawaban = 'A', id_jawaban_survey, 0 ) ) AS id_jawaban1, 
-                        MAX( if( kode_jawaban = 'A', jawaban_survey, 0 ) ) AS jawaban1,
-                        MAX( if( kode_jawaban = 'B', id_jawaban_survey, 0 ) ) AS id_jawaban2,
-                        MAX( if( kode_jawaban = 'B', jawaban_survey, 0 ) ) AS jawaban2, 
-                        MAX( if( kode_jawaban = 'C', id_jawaban_survey, 0 ) ) AS id_jawaban3,
-                        MAX( if( kode_jawaban = 'C', jawaban_survey, 0 ) ) AS jawaban3, 
-                        MAX( if( kode_jawaban = 'D', id_jawaban_survey, 0 ) ) AS id_jawaban4,
-                        MAX( if( kode_jawaban = 'D', jawaban_survey, 0 ) ) AS jawaban4 
+                        MAX( if( kode_jawaban = 1, id_jawaban_survey, 0 ) ) AS id_jawaban1, 
+                        MAX( if( kode_jawaban = 1, jawaban_survey, 0 ) ) AS jawaban1,
+                        MAX( if( kode_jawaban = 2, id_jawaban_survey, 0 ) ) AS id_jawaban2,
+                        MAX( if( kode_jawaban = 2, jawaban_survey, 0 ) ) AS jawaban2, 
+                        MAX( if( kode_jawaban = 3, id_jawaban_survey, 0 ) ) AS id_jawaban3,
+                        MAX( if( kode_jawaban = 3, jawaban_survey, 0 ) ) AS jawaban3, 
+                        MAX( if( kode_jawaban = 4, id_jawaban_survey, 0 ) ) AS id_jawaban4,
+                        MAX( if( kode_jawaban = 4, jawaban_survey, 0 ) ) AS jawaban4 
                     FROM ( 
                         SELECT a.id_pertanyaan_survey, a.pertanyaan_survey, b.id_jawaban_survey, b.jawaban_survey, b.kode_jawaban
                         FROM pertanyaan_survey a 
@@ -175,14 +175,14 @@ router.get('/', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
-                        MAX( if( kode_jawaban = 'A', id_jawaban, 0 ) ) AS id_jawaban1, 
-                        MAX( if( kode_jawaban = 'A', jawaban, 0 ) ) AS jawaban1,
-                        MAX( if( kode_jawaban = 'B', id_jawaban, 0 ) ) AS id_jawaban2,
-                        MAX( if( kode_jawaban = 'B', jawaban, 0 ) ) AS jawaban2, 
-                        MAX( if( kode_jawaban = 'C', id_jawaban, 0 ) ) AS id_jawaban3,
-                        MAX( if( kode_jawaban = 'C', jawaban, 0 ) ) AS jawaban3, 
-                        MAX( if( kode_jawaban = 'D', id_jawaban, 0 ) ) AS id_jawaban4,
-                        MAX( if( kode_jawaban = 'D', jawaban, 0 ) ) AS jawaban4 
+                        MAX( if( kode_jawaban = 1, id_jawaban, 0 ) ) AS id_jawaban1, 
+                        MAX( if( kode_jawaban = 1, jawaban, 0 ) ) AS jawaban1,
+                        MAX( if( kode_jawaban = 2, id_jawaban, 0 ) ) AS id_jawaban2,
+                        MAX( if( kode_jawaban = 2, jawaban, 0 ) ) AS jawaban2, 
+                        MAX( if( kode_jawaban = 3, id_jawaban, 0 ) ) AS id_jawaban3,
+                        MAX( if( kode_jawaban = 3, jawaban, 0 ) ) AS jawaban3, 
+                        MAX( if( kode_jawaban = 4, id_jawaban, 0 ) ) AS id_jawaban4,
+                        MAX( if( kode_jawaban = 4, jawaban, 0 ) ) AS jawaban4 
                     FROM ( 
                         SELECT a.id_pertanyaan, a.pertanyaan, b.id_jawaban, b.jawaban, b.kode_jawaban
                         FROM pertanyaan a 
@@ -202,14 +202,14 @@ router.get('/:id', verifyToken, async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
-                        MAX( if( kode_jawaban = 'A', id_jawaban, 0 ) ) AS id_jawaban1, 
-                        MAX( if( kode_jawaban = 'A', jawaban, 0 ) ) AS jawaban1,
-                        MAX( if( kode_jawaban = 'B', id_jawaban, 0 ) ) AS id_jawaban2,
-                        MAX( if( kode_jawaban = 'B', jawaban, 0 ) ) AS jawaban2, 
-                        MAX( if( kode_jawaban = 'C', id_jawaban, 0 ) ) AS id_jawaban3,
-                        MAX( if( kode_jawaban = 'C', jawaban, 0 ) ) AS jawaban3, 
-                        MAX( if( kode_jawaban = 'D', id_jawaban, 0 ) ) AS id_jawaban4,
-                        MAX( if( kode_jawaban = 'D', jawaban, 0 ) ) AS jawaban4 
+                        MAX( if( kode_jawaban = 1, id_jawaban, 0 ) ) AS id_jawaban1, 
+                        MAX( if( kode_jawaban = 1, jawaban, 0 ) ) AS jawaban1,
+                        MAX( if( kode_jawaban = 2, id_jawaban, 0 ) ) AS id_jawaban2,
+                        MAX( if( kode_jawaban = 2, jawaban, 0 ) ) AS jawaban2, 
+                        MAX( if( kode_jawaban = 3, id_jawaban, 0 ) ) AS id_jawaban3,
+                        MAX( if( kode_jawaban = 3, jawaban, 0 ) ) AS jawaban3, 
+                        MAX( if( kode_jawaban = 4, id_jawaban, 0 ) ) AS id_jawaban4,
+                        MAX( if( kode_jawaban = 4, jawaban, 0 ) ) AS jawaban4 
                     FROM ( 
                         SELECT a.id_pertanyaan, a.pertanyaan, b.id_jawaban, b.jawaban, b.kode_jawaban
                         FROM pertanyaan a 

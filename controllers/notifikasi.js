@@ -28,7 +28,7 @@ router.get('/limit', verifyToken, async (req, res) => {
                         notifikasi.id_notifikasi
                     DESC
                     LIMIT
-                        10`;
+                        5`;
         let result = await db.query(query, [req.user.userId]);
         response.ok(result, res);
     } catch (error) {
