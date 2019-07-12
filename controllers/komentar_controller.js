@@ -1,14 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const response = require('../config/res');
 const db = require('../config/db');
-const verifyToken = require('../helper/verify-token');
 
-router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-router.use(bodyParser.json({ limit: "50mb" }));
-
-router.get('/:id', verifyToken, async (req, res) => {
+exports.getKomentar = async (req, res) => {
     try {
         let query = `SELECT * FROM komentar INNER JOIN lapor ON 
                     komentar.id_lapor_komentar = lapor.id_lapor AND komentar.id_lapor_komentar = ? 
@@ -18,9 +11,9 @@ router.get('/:id', verifyToken, async (req, res) => {
     } catch (error) {
         response.fail(error.message, res);
     }
-});
+}
 
-router.post('/', verifyToken, async (req, res) => {
+exports.addKomentar = async (req, res) => {
     try {
         let idlapor = req.body.idlapor;
         let iduser = req.user.userId;
@@ -33,9 +26,9 @@ router.post('/', verifyToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.put('/', verifyToken, async (req, res) => {
+exports.editKomentar = async (req, res) => {
     try {
         let id = req.body.id;
         let desk = req.body.desk;
@@ -46,9 +39,9 @@ router.put('/', verifyToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.delete('/:id', verifyToken, async (req, res) => {
+exports.deleteKomentar = async (req, res) => {
     try {
         let id = req.params.id;
         let query = `DELETE FROM komentar WHERE id_komentar = ?`;
@@ -58,9 +51,9 @@ router.delete('/:id', verifyToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/getid/:id', verifyToken, async (req, res) => {
+exports.getKomentarbyId = async (req, res) => {
     try {
         let query = `SELECT * FROM komentar WHERE komentar.id_komentar = ?`;
         let result = await db.query(query, [req.params.id]);
@@ -68,6 +61,4 @@ router.get('/getid/:id', verifyToken, async (req, res) => {
     } catch (error) {
         response.fail(error.message, res);
     }
-});
-
-module.exports = router;
+}

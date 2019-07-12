@@ -1,14 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const response = require('../config/res');
 const db = require('../config/db');
-const verifyToken = require('../helper/verify-token');
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
-router.get('/', verifyToken, async (req, res) => {
+exports.lihatKritikSaran = async (req, res) => {
     try {
         let query = `SELECT kritiksaran.id_kritiksaran, kritiksaran.rate_kritiksaran, kritiksaran.desk_kritiksaran,
                     kritiksaran.tgl_kritiksaran, user.id_user, user.nama_user FROM kritiksaran INNER JOIN user
@@ -18,9 +11,9 @@ router.get('/', verifyToken, async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
-});
+}
 
-router.get('/:id', verifyToken, async (req, res) => {
+exports.getKritikSaranById = async (req, res) => {
     try {
         let id = req.body.id;
 
@@ -29,9 +22,9 @@ router.get('/:id', verifyToken, async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
-});
+}
 
-router.post('/', verifyToken, async (req, res) => {
+exports.addKritikSaran = async (req, res) => {
     try {        
         let user = req.user.userId;
         let rate = req.body.rate;
@@ -47,6 +40,4 @@ router.post('/', verifyToken, async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
-});
-
-module.exports = router;
+}

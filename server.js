@@ -4,15 +4,15 @@ const cors = require('cors');
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const response = require('./config/res');
-const user = require('./controllers/user');
-const info = require('./controllers/info');
-const kritik = require('./controllers/kritiksaran');
-const lapor = require('./controllers/lapor');
-const komentar = require('./controllers/komentar');
-const izin = require('./controllers/izin');
-const notifikasi = require('./controllers/notifikasi');
-const survey = require('./controllers/survey');
-const dashboard = require('./controllers/dashboard');
+const user = require('./routes/user');
+const info = require('./routes/info');
+const kritik = require('./routes/kritiksaran');
+const lapor = require('./routes/lapor');
+const komentar = require('./routes/komentar');
+const izin = require('./routes/izin');
+const notifikasi = require('./routes/notifikasi');
+const survey = require('./routes/survey');
+const dashboard = require('./routes/dashboard');
 
 
 app.use(cors());

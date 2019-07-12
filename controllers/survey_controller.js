@@ -1,14 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const response = require('../config/res');
 const db = require('../config/db');
-const verifyToken = require('../helper/verify-token');
 
-router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-router.use(bodyParser.json({ limit: "50mb" }));
-
-router.get('/hasil', verifyToken, async (req, res) => {
+exports.hasilSurvey = async (req, res) => {
     try {
         let query = `SELECT 
                             id_pertanyaan_survey, pertanyaan_survey,
@@ -43,9 +36,9 @@ router.get('/hasil', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/list', verifyToken, async (req, res) => {
+exports.getSurvey = async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
@@ -70,9 +63,9 @@ router.get('/list', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.post('/submit', verifyToken, verifyToken, async (req, res) => {
+exports.submitSurvey = async (req, res) => {
     try {
         let query = `INSERT INTO survey (id_user_survey, id_pertanyaan_survey, id_jawaban_survey, tgl_survey)
                      VALUES (?,?,?,?)`;
@@ -82,9 +75,9 @@ router.post('/submit', verifyToken, verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/list/:id', verifyToken, async (req, res) => {
+exports.getSurveyById = async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan_survey,pertanyaan_survey,
@@ -111,9 +104,9 @@ router.get('/list/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.put('/list', verifyToken, async (req, res) => {
+exports.editSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -144,34 +137,9 @@ router.put('/list', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.delete('/list', verifyToken, async (req, res) => {
-    try {
-        db.getConnection((err, conn) => {
-            if (err) { throw err; }
-            conn.beginTransaction(async (err) => {
-                if (err) { throw err; }
-                await db.query(`DELETE FROM jawaban_survey `);
-                await db.query(`DELETE FROM pertanyaan_survey`);
-
-            });
-            conn.commit(err => {
-                if (err) {
-                    return conn.rollback(() => {
-                        throw err;
-                    });
-                }
-                response.ok(`Berhasil menghapus pertanyaan ${req.params.id}`, res);
-            });
-        });
-    } catch (error) {
-        console.log(error.message);
-        
-    }
-});
-
-router.get('/', verifyToken, async (req, res) => {
+exports.getMasterSurvey = async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
@@ -196,9 +164,9 @@ router.get('/', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.get('/:id', verifyToken, async (req, res) => {
+exports.getMasterSurveyById = async (req, res) => {
     try {
         let query = `SELECT 
                         id_pertanyaan,pertanyaan,
@@ -225,9 +193,9 @@ router.get('/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.post('/', verifyToken, async (req, res) => {
+exports.addMasterPertanyaan = async (req, res) => {
     try {        
         let result = await db.query('INSERT INTO pertanyaan (pertanyaan) VALUES (?)', [req.body.pertanyaan]);
         response.ok(result, res);
@@ -235,20 +203,9 @@ router.post('/', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.put('/:id', verifyToken, async (req, res) => {
-    try {
-        let result = await db.query('UPDATE pertanyaan SET pertanyaan.pertanyaan = ? WHERE pertanyaan.id_pertanyaan = ?', 
-        [req.body.params]);
-        response.ok(result, res);
-    } catch (error) {
-        console.log(error.message);
-        
-    }
-})
-
-router.post('/jawaban', verifyToken, async (req, res) => {
+exports.addMasterjawaban = async (req, res) => {
     try {
         let result = await db.query('INSERT INTO jawaban (id_pertanyaan_jawaban, jawaban, kode_jawaban) VALUES (?,?,?)', [req.body.id, req.body.jawaban, req.body.kode]);
         response.ok(result, res);
@@ -256,9 +213,9 @@ router.post('/jawaban', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.post('/addall', verifyToken, async (req, res) => {
+exports.addAllMasterToSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -284,9 +241,9 @@ router.post('/addall', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.post('/addsurvey', verifyToken, async (req, res) => {
+exports.addMasterToSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -314,9 +271,9 @@ router.post('/addsurvey', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.put('/', verifyToken, async (req, res) => {
+exports.editMasterSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -347,9 +304,9 @@ router.put('/', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.delete('/:id', verifyToken, async (req, res) => {
+exports.deleteMasterSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -372,9 +329,9 @@ router.delete('/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.delete('/list/:id', verifyToken, async (req, res) => {
+exports.deleteSurvey = async (req, res) => {
     try {
         db.getConnection((err, conn) => {
             if (err) { throw err; }
@@ -397,6 +354,4 @@ router.delete('/list/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
-
-module.exports = router;
+}

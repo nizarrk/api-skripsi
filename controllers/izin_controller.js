@@ -1,17 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const sharp = require('sharp');
-const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
-const verifyToken = require('../helper/verify-token');
 const customID = require('../helper/custom-id');
 
-router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-router.use(bodyParser.json({ limit: "50mb" }));
-
-router.get('/getall', verifyToken, async (req, res) => {
+exports.getCountIzin = async (req, res) => {
     try {
         let query = `SELECT 
                         *, 
@@ -33,9 +25,9 @@ router.get('/getall', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/getall/:id', verifyToken, async (req, res) => {
+exports.getIzinById = async (req, res) => {
     try {
         let query = `SELECT * FROM izin INNER JOIN user ON izin.id_user_izin = user.id_user
                      AND izin.id_izin = ? ORDER BY id_izin DESC`;
@@ -45,9 +37,9 @@ router.get('/getall/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/', verifyToken, async (req, res) => {
+exports.getIzinUser = async (req, res) => {
     try {
         let query = `SELECT * FROM izin INNER JOIN user ON izin.id_user_izin = user.id_user 
                     AND user.id_user = ? ORDER BY id_izin DESC`;
@@ -57,8 +49,9 @@ router.get('/', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
-router.get('/:id', verifyToken, async (req, res) => {
+}
+
+exports.getIzinUserDetail = async (req, res) => {
     try {
         let query = `SELECT * FROM izin WHERE id_izin = ?`;
         let result = await db.query(query, [req.params.id]);
@@ -67,9 +60,9 @@ router.get('/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.post('/', verifyToken, upload.fields([{name: 'fotoSurat'}, {name: 'fotoKTP'}, {name: 'fotoKK'}]), async (req, res) => {
+exports.addIzinUser = async (req, res) => {
     try {
         let pathSurat = req.files.fotoSurat[0].path.replace(/\\/g, "/");
         let pathKTP = req.files.fotoKTP[0].path.replace(/\\/g, "/");
@@ -107,9 +100,9 @@ router.post('/', verifyToken, upload.fields([{name: 'fotoSurat'}, {name: 'fotoKT
         console.log(error.message);
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.put('/:id', verifyToken, async (req, res) => {
+exports.editIzinUser = async (req, res) => {
     try {
         let query = await db.query('UPDATE izin SET status_izin = ?, pesan_tolak_izin = ? WHERE id_izin = ?', 
         [req.body.status, req.body.pesan, req.params.id]);
@@ -119,6 +112,4 @@ router.put('/:id', verifyToken, async (req, res) => {
         res.status(500).json({message: error.message});
         
     }
-})
-
-module.exports = router;
+}

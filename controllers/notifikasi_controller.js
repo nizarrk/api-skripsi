@@ -1,14 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const response = require('../config/res');
 const db = require('../config/db');
-const verifyToken = require('../helper/verify-token');
 
-router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-router.use(bodyParser.json({ limit: "50mb" }));
-
-router.get('/limit', verifyToken, async (req, res) => {
+exports.getNotifLimit = async (req, res) => {
     try {
         let query = `SELECT 
                         notifikasi.id_notifikasi, notifikasi.id_user_notifikasi, notifikasi.id_user_notifikator,
@@ -35,9 +28,9 @@ router.get('/limit', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.get('/', verifyToken, async (req, res) => {
+exports.getNotif = async (req, res) => {
     try {
         let query = `SELECT 
                         notifikasi.id_notifikasi, notifikasi.id_user_notifikasi, notifikasi.id_user_notifikator,
@@ -62,9 +55,9 @@ router.get('/', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.get('/count', verifyToken, async (req, res) => {
+exports.countNotif = async (req, res) => {
     try {
         let query = `SELECT 
                         COUNT(id_notifikasi) AS count 
@@ -80,9 +73,9 @@ router.get('/count', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.post('/', verifyToken, async (req, res) => {
+exports.addNotif = async (req, res) => {
     try {
         let query = `INSERT INTO 
                         notifikasi 
@@ -94,9 +87,9 @@ router.post('/', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.put('/:id', verifyToken, async (req, res) => {
+exports.updateStatusNotif = async (req, res) => {
     try {
         let query = `UPDATE
                         notifikasi
@@ -110,6 +103,4 @@ router.put('/:id', verifyToken, async (req, res) => {
         console.log(error.message);
         
     }
-})
-
-module.exports = router;
+}

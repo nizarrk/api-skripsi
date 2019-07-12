@@ -1,19 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const sharp = require('sharp');
-const upload = require('../helper/upload-image');
 const response = require('../config/res');
 const db = require('../config/db');
 const key = require('../config/key');
-const verifyToken = require('../helper/verify-token');
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
-router.post('/register', upload.single('fotoUser'), async (req, res) => {
+exports.register = async (req, res) => {
     try {
         let path = '';
         if (req.file == undefined) {
@@ -21,9 +13,6 @@ router.post('/register', upload.single('fotoUser'), async (req, res) => {
         } else {
             path = req.file.path.replace(/\\/g, "/");
         }
-        //var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-        // let fullUrl = req.protocol + '://' + req.get('host') + '/';
-        // let path = req.file.path.replace(/\\/g, "/");
 
         let resize = await sharp('./' + path).withMetadata().toBuffer();
         await sharp(resize).withMetadata().resize(1080).toFile('./' + path);
@@ -53,9 +42,9 @@ router.post('/register', upload.single('fotoUser'), async (req, res) => {
         res.status(500).json({message: error.message});
         
     }
-});
+}
 
-router.post('/login', async (req, res) => {
+exports.login = async (req, res) => {
     try {
         let email = req.body.email;
         let pass = req.body.pass;
@@ -83,29 +72,18 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message});
     }
-});
+}
 
-router.get('/tes', verifyToken, async (req, res) => {
-    try {
-        res.send("halo");
-        console.log(req.userId);
-        
-    } catch (error) {
-        console.log(error.message);
-        
-    }    
-});
-
-router.get('/', async (req, res) => {
+exports.getAllUser = async (req, res) => {
     try {
         let result = await db.query('SELECT * FROM user');
         response.ok(result, res);
     } catch (error) {
         console.log(error.message);
     }
-});
+}
 
-router.get('/profile', verifyToken, async (req, res) => {
+exports.profile = async (req, res) => {
     try {
         let id = req.user.userId;
         let query = `SELECT user.id_user, user.nama_user, user.alamat_user, user.tgl_lahir_user,
@@ -125,9 +103,9 @@ router.get('/profile', verifyToken, async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
-});
+}
 
-router.post('/', async (req, res) => {
+exports.addUser = async (req, res) => {
     try {
         let nama = req.body.nama;
         let alamat = req.body.alamat;
@@ -145,9 +123,9 @@ router.post('/', async (req, res) => {
         console.log(error.message);
         
     }
-});
+}
 
-router.put('/pass', verifyToken, async (req, res) => {
+exports.editPass = async (req, res) => {
     try {
         let check = `SELECT user.pass_user FROM user WHERE user.id_user = ?`;
         let oldpass = await db.query(check, [req.user.userId]);
@@ -167,9 +145,9 @@ router.put('/pass', verifyToken, async (req, res) => {
     } catch (error) {
         
     }
-});
+}
 
-router.put('/:id', verifyToken, upload.single('fotoUser'), async (req, res) => {
+exports.editProfile = async (req, res) => {
     try {
         let path = '';
         if (req.file == undefined) {
@@ -217,10 +195,9 @@ router.put('/:id', verifyToken, upload.single('fotoUser'), async (req, res) => {
         console.log(error.message);
 
     }
-});
+}
 
-
-router.delete('/:id', async (req, res) => {
+exports.deleteUser = async (req, res) => {
     try {
         let user_id = req.params.id;
 
@@ -230,6 +207,4 @@ router.delete('/:id', async (req, res) => {
         console.log(error.message);
         
     }
-});
-
-module.exports = router;
+}
