@@ -3,26 +3,42 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const upload = require('../helper/upload-image');
 const verifyToken = require('../helper/verify-token');
-const user = require('../controllers/user_controller');
-
+const User = require('../controllers/user_controller');
+const newuser = new User();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.post('/register', upload.single('fotoUser'), user.register);
+router.post('/register', upload.single('fotoUser'), (req, res) => {
+    newuser.register(req, res);
+});
 
-router.post('/login', user.login);
+router.post('/login', (req, res) => {
+    newuser.login(req, res);
+});
 
-router.get('/', user.getAllUser);
+router.get('/', (req, res) => {
+    newuser.getAllUser(req, res);
+});
 
-router.get('/profile', verifyToken, user.profile);
+router.get('/profile', verifyToken, (req, res) => {
+    newuser.profile(req, res);
+});
 
-router.post('/', user.addUser);
+router.post('/', (req, res) => {
+    newuser.addUser(req, res);
+});
 
-router.put('/pass', verifyToken, user.editPass);
+router.put('/pass', verifyToken, (req, res) => {
+    newuser.editPass(req, res)
+});
 
-router.put('/:id', verifyToken, upload.single('fotoUser'), user.editProfile);
+router.put('/:id', verifyToken, upload.single('fotoUser'), (req, res) => {
+    newuser.editProfile(req, res);
+});
 
 
-router.delete('/:id', user.deleteUser);
+router.delete('/:id', (req, res) => {
+    newuser.deleteUser(req, res);
+});
 
 module.exports = router;
