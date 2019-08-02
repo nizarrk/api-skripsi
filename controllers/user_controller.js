@@ -39,7 +39,7 @@ class UserController {
             console.log(path);
             
     
-            let result = await db.query('SELECT email_user FROM user where email_user = ?', [ email ]);
+            let result = await db.query('SELECT email_user FROM user where email_user = ?', [ this.email ]);
             if (result.length > 0) {
                 response.fail("email sudah terdaftar", res);
             } else {
